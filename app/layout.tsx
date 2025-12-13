@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { GoogleTagManager, GoogleTagManagerNoScript } from "@/components/analytics/google-tag-manager";
 import { CustomCursor } from "@/components/ui/custom-cursor";
@@ -168,6 +169,8 @@ export default function RootLayout({
         {/* Google Analytics */}
         <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
         {children}
+        {/* Vercel Speed Insights */}
+        <SpeedInsights />
       </body>
     </html>
   );
