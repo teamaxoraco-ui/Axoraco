@@ -1,0 +1,151 @@
+"use client"
+
+import { motion } from "framer-motion"
+import { Mail, MapPin, Phone, Send, Clock, Shield, Zap } from "lucide-react"
+import { Navbar } from "@/components/ui/navbar"
+import { Footer } from "@/components/ui/footer"
+import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
+
+export default function ContactPageClient() {
+    return (
+        <main className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500/30">
+            <Navbar />
+
+            <SpotlightContainer className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 overflow-hidden">
+                <div className="container mx-auto max-w-6xl relative z-10">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 xl:gap-24">
+                        {/* Contact Info */}
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                        >
+                            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 mb-6 sm:mb-8 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs sm:text-sm font-medium">
+                                <Mail className="w-3 h-3 sm:w-4 sm:h-4" />
+                                <span>Get In Touch</span>
+                            </div>
+
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 tracking-tight">
+                                Let's Build the <br className="hidden sm:block" />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                                    Future Together.
+                                </span>
+                            </h1>
+                            <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-12 leading-relaxed">
+                                Ready to automate your operations? Schedule a consultation or send us a message.
+                            </p>
+
+                            <div className="space-y-3 sm:space-y-4">
+                                {[
+                                    { icon: Mail, title: "Email Us", value: "hello@axoraco.com" },
+                                    { icon: Phone, title: "Call Us", value: "+1 (555) 123-4567" },
+                                    { icon: MapPin, title: "Visit Us", value: "123 Innovation Dr, Suite 400\nTech City, TC 90210" },
+                                ].map((item, i) => (
+                                    <SpotlightCard key={i} className="rounded-xl sm:rounded-2xl">
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.3 + i * 0.1 }}
+                                            className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-colors"
+                                        >
+                                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 flex-shrink-0">
+                                                <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+                                            </div>
+                                            <div>
+                                                <h4 className="text-base sm:text-lg font-semibold mb-0.5 sm:mb-1">{item.title}</h4>
+                                                <p className="text-sm sm:text-base text-slate-400 whitespace-pre-line">{item.value}</p>
+                                            </div>
+                                        </motion.div>
+                                    </SpotlightCard>
+                                ))}
+                            </div>
+
+                            <div className="mt-6 sm:mt-10 flex flex-wrap gap-4 sm:gap-6">
+                                {[
+                                    { icon: Shield, text: "Secure & Private" },
+                                    { icon: Clock, text: "Response in 24h" },
+                                    { icon: Zap, text: "Free Consultation" },
+                                ].map((badge, i) => (
+                                    <div key={i} className="flex items-center gap-2 text-xs sm:text-sm text-slate-400">
+                                        <badge.icon className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                                        {badge.text}
+                                    </div>
+                                ))}
+                            </div>
+                        </motion.div>
+
+                        {/* Contact Form */}
+                        <SpotlightCard className="rounded-2xl sm:rounded-3xl">
+                            <motion.div
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2, duration: 0.6 }}
+                                className="bg-slate-900/60 border border-slate-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-sm hover:border-indigo-500/30 transition-colors"
+                            >
+                                <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Send Us a Message</h2>
+                                <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8">We'll get back to you within 24 hours.</p>
+
+                                <form className="space-y-4 sm:space-y-6">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                        <div className="space-y-1 sm:space-y-2">
+                                            <label htmlFor="firstName" className="text-xs sm:text-sm font-medium text-slate-300">First Name</label>
+                                            <input
+                                                type="text"
+                                                id="firstName"
+                                                className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                                                placeholder="John"
+                                            />
+                                        </div>
+                                        <div className="space-y-1 sm:space-y-2">
+                                            <label htmlFor="lastName" className="text-xs sm:text-sm font-medium text-slate-300">Last Name</label>
+                                            <input
+                                                type="text"
+                                                id="lastName"
+                                                className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                                                placeholder="Doe"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1 sm:space-y-2">
+                                        <label htmlFor="email" className="text-xs sm:text-sm font-medium text-slate-300">Email</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
+                                            placeholder="john@company.com"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-1 sm:space-y-2">
+                                        <label htmlFor="message" className="text-xs sm:text-sm font-medium text-slate-300">Message</label>
+                                        <textarea
+                                            id="message"
+                                            rows={4}
+                                            className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none"
+                                            placeholder="Tell us about your project..."
+                                        />
+                                    </div>
+
+                                    <button
+                                        type="submit"
+                                        className="group relative w-full overflow-hidden rounded-lg sm:rounded-xl"
+                                    >
+                                        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600" />
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                                        <div className="relative px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-center gap-2 text-white font-bold text-sm sm:text-base">
+                                            Send Message
+                                            <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                        </div>
+                                    </button>
+                                </form>
+                            </motion.div>
+                        </SpotlightCard>
+                    </div>
+                </div>
+            </SpotlightContainer>
+
+            <Footer />
+        </main>
+    )
+}

@@ -1,0 +1,14 @@
+# Robots.txt for Axoraco
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://axoraco.com/sitemap.xml
+
+# Crawl-delay (optional, for polite bots)
+Crawl-delay: 1
+
+# Disallow paths (if any)
+Disallow: /api/
+Disallow: /_next/
