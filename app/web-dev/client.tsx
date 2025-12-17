@@ -7,6 +7,7 @@ import { Footer } from "@/components/ui/footer"
 import { CTASection } from "@/components/ui/cta-section"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
 import Link from "next/link"
+import { smoothSpring } from "@/lib/animations"
 
 const technologies = [
     "Next.js", "React", "TypeScript", "Tailwind CSS",
@@ -71,7 +72,7 @@ export default function WebDevPageClient() {
                             </span>
                         </h1>
                         <p className="text-lg sm:text-xl text-slate-300 leading-relaxed mb-8 sm:mb-10">
-                            We don't just build websites; we engineer digital ecosystems.
+                            We don&apos;t just build websites; we engineer digital ecosystems.
                             Performance, SEO, and user experience are baked into every line of code.
                         </p>
 

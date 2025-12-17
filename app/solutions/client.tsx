@@ -7,6 +7,7 @@ import { CTASection } from "@/components/ui/cta-section"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
 import { Layers, ArrowRight, CheckCircle2, Sparkles } from "lucide-react"
 import Link from "next/link"
+import { smoothSpring } from "@/lib/animations"
 
 const steps = [
     { title: "Strategy", desc: "We analyze your workflows to identify high-impact automation opportunities." },
@@ -30,6 +31,22 @@ const caseStudies = [
         company: "Nova Finance",
         location: "New York, NY",
         gradient: "from-cyan-500 to-blue-500"
+    },
+    {
+        industry: "Healthcare",
+        title: "85% Reduction in No-Shows",
+        quote: "The AI appointment reminder system transformed our patient scheduling. Cancellations dropped dramatically and our staff can focus on care.",
+        company: "MedFirst Clinics",
+        location: "Chicago, IL",
+        gradient: "from-green-500 to-emerald-500"
+    },
+    {
+        industry: "E-commerce",
+        title: "24/7 Customer Support at 10% Cost",
+        quote: "Our AI chatbot handles 80% of inquiries automatically. Customer satisfaction improved while support costs plummeted.",
+        company: "TrendMart",
+        location: "Austin, TX",
+        gradient: "from-orange-500 to-red-500"
     }
 ]
 
@@ -142,7 +159,7 @@ export default function SolutionsPageClient() {
                                         <div className="text-sm text-indigo-400 font-bold uppercase tracking-wider mb-4">{study.industry}</div>
                                         <h3 className="text-2xl font-bold text-white mb-4">{study.title}</h3>
                                         <p className="text-slate-400 mb-6 leading-relaxed">
-                                            "{study.quote}"
+                                            &ldquo;{study.quote}&rdquo;
                                         </p>
                                         <div className="flex items-center gap-4">
                                             <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${study.gradient} flex items-center justify-center text-white font-bold text-lg`}>

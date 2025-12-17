@@ -1,12 +1,65 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { Mail, MapPin, Phone, Send, Clock, Shield, Zap } from "lucide-react"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Mail, MapPin, Phone, Send, Clock, Shield, Zap, CheckCircle2, AlertCircle } from "lucide-react"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
+import { LoadingSpinner } from "@/components/ui/button"
+
+interface FormState {
+    firstName: string
+    lastName: string
+    email: string
+    message: string
+}
+
+type SubmitStatus = "idle" | "loading" | "success" | "error"
 
 export default function ContactPageClient() {
+    const [formData, setFormData] = useState<FormState>({
+        firstName: "",
+        lastName: "",
+        email: "",
+        message: "",
+    })
+    const [status, setStatus] = useState<SubmitStatus>("idle")
+    const [errorMessage, setErrorMessage] = useState("")
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setFormData((prev) => ({
+            ...prev,
+            [e.target.id]: e.target.value,
+        }))
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setStatus("loading")
+        setErrorMessage("")
+
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || "Something went wrong")
+            }
+
+            setStatus("success")
+            setFormData({ firstName: "", lastName: "", email: "", message: "" })
+        } catch (error) {
+            setStatus("error")
+            setErrorMessage(error instanceof Error ? error.message : "Failed to send message")
+        }
+    }
+
     return (
         <main className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500/30">
             <Navbar />
@@ -26,7 +79,7 @@ export default function ContactPageClient() {
                             </div>
 
                             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 sm:mb-8 tracking-tight">
-                                Let's Build the <br className="hidden sm:block" />
+                                Let&apos;s Build the <br className="hidden sm:block" />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
                                     Future Together.
                                 </span>
@@ -83,15 +136,55 @@ export default function ContactPageClient() {
                                 className="bg-slate-900/60 border border-slate-800 rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 backdrop-blur-sm hover:border-indigo-500/30 transition-colors"
                             >
                                 <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Send Us a Message</h2>
-                                <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8">We'll get back to you within 24 hours.</p>
+                                <p className="text-sm sm:text-base text-slate-400 mb-6 sm:mb-8">We&apos;ll get back to you within 24 hours.</p>
 
-                                <form className="space-y-4 sm:space-y-6">
+                                {/* Success Message */}
+                                <AnimatePresence mode="wait">
+                                    {status === "success" && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/30 flex items-start gap-3"
+                                            role="alert"
+                                            aria-live="polite"
+                                        >
+                                            <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="text-green-400 font-medium">Message sent successfully!</p>
+                                                <p className="text-green-400/70 text-sm">We&apos;ll get back to you within 24 hours.</p>
+                                            </div>
+                                        </motion.div>
+                                    )}
+
+                                    {status === "error" && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 flex items-start gap-3"
+                                            role="alert"
+                                            aria-live="polite"
+                                        >
+                                            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <p className="text-red-400 font-medium">Failed to send message</p>
+                                                <p className="text-red-400/70 text-sm">{errorMessage}</p>
+                                            </div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                         <div className="space-y-1 sm:space-y-2">
                                             <label htmlFor="firstName" className="text-xs sm:text-sm font-medium text-slate-300">First Name</label>
                                             <input
                                                 type="text"
                                                 id="firstName"
+                                                value={formData.firstName}
+                                                onChange={handleChange}
+                                                required
                                                 className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                                                 placeholder="John"
                                             />
@@ -101,6 +194,9 @@ export default function ContactPageClient() {
                                             <input
                                                 type="text"
                                                 id="lastName"
+                                                value={formData.lastName}
+                                                onChange={handleChange}
+                                                required
                                                 className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                                                 placeholder="Doe"
                                             />
@@ -112,6 +208,9 @@ export default function ContactPageClient() {
                                         <input
                                             type="email"
                                             id="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            required
                                             className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                                             placeholder="john@company.com"
                                         />
@@ -122,6 +221,9 @@ export default function ContactPageClient() {
                                         <textarea
                                             id="message"
                                             rows={4}
+                                            value={formData.message}
+                                            onChange={handleChange}
+                                            required
                                             className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all resize-none"
                                             placeholder="Tell us about your project..."
                                         />
@@ -129,13 +231,23 @@ export default function ContactPageClient() {
 
                                     <button
                                         type="submit"
-                                        className="group relative w-full overflow-hidden rounded-lg sm:rounded-xl"
+                                        disabled={status === "loading"}
+                                        className="group relative w-full overflow-hidden rounded-lg sm:rounded-xl disabled:opacity-70 disabled:cursor-not-allowed"
                                     >
                                         <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600" />
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
                                         <div className="relative px-6 sm:px-8 py-3 sm:py-4 flex items-center justify-center gap-2 text-white font-bold text-sm sm:text-base">
-                                            Send Message
-                                            <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            {status === "loading" ? (
+                                                <>
+                                                    <LoadingSpinner size="sm" />
+                                                    Sending...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    Send Message
+                                                    <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                </>
+                                            )}
                                         </div>
                                     </button>
                                 </form>

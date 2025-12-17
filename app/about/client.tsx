@@ -6,6 +6,8 @@ import { Footer } from "@/components/ui/footer"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
 import { Flag, Globe, Zap, Shield, Heart, ArrowRight, Target, Award, TrendingUp } from "lucide-react"
 import Link from "next/link"
+import { smoothSpring } from "@/lib/animations"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
 
 const stats = [
     { label: "Countries Served", value: "12+", icon: Globe },
@@ -17,13 +19,13 @@ const stats = [
 const timeline = [
     { year: "2023", title: "The Inception", desc: "Axoraco was founded with a single mission: to democratize AI automation for businesses of all sizes." },
     { year: "2024", title: "Rapid Expansion", desc: "Launched our proprietary Voice AI engine and expanded operations to 3 continents with enterprise clients." },
-    { year: "2025", title: "The Future", desc: "Building the world's first autonomous enterprise operating system, redefining how businesses scale." },
+    { year: "2025", title: "The Future", desc: "Building the world\u0027s first autonomous enterprise operating system, redefining how businesses scale." },
 ]
 
 const values = [
     {
         title: "Innovation First",
-        desc: "We don't follow trends; we set them. Every solution we build pushes the boundaries of what's possible.",
+        desc: "We don\u0027t follow trends; we set them. Every solution we build pushes the boundaries of what\u0027s possible.",
         icon: Zap
     },
     {
@@ -98,7 +100,7 @@ export default function AboutPageClient() {
                             <span>Our Mission</span>
                         </div>
                         <blockquote className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-medium text-white leading-relaxed px-2">
-                            "To eliminate the friction between human intention and business execution through intelligent automation."
+                            &ldquo;To eliminate the friction between human intention and business execution through intelligent automation.&rdquo;
                         </blockquote>
                     </motion.div>
                 </div>
@@ -262,7 +264,7 @@ export default function AboutPageClient() {
                             Ready to Transform Your Operations?
                         </h2>
                         <p className="text-base sm:text-lg md:text-xl text-slate-400 mb-8 sm:mb-10 px-2">
-                            Let's discuss how Axoraco can help you achieve operational excellence.
+                            Let&apos;s discuss how Axoraco can help you achieve operational excellence.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
                             <Link

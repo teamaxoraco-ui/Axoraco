@@ -3,37 +3,39 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Sparkles, Zap, Shield, Clock } from "lucide-react"
 import Link from "next/link"
+import { smoothSpring } from "@/lib/animations"
+import { SpotlightContainer } from "@/components/ui/spotlight"
 
-// Animation variants for staggered entry
+// Animation variants for staggered entry with smooth springs
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.15,
-            delayChildren: 0.2,
+            staggerChildren: 0.12,
+            delayChildren: 0.15,
         },
     },
 }
 
 const itemVariants = {
-    hidden: { opacity: 0, y: 30, filter: "blur(10px)" },
+    hidden: { opacity: 0, y: 30, filter: "blur(8px)" },
     visible: {
         opacity: 1,
         y: 0,
         filter: "blur(0px)",
         transition: {
-            duration: 0.8,
-            ease: [0.25, 0.4, 0.25, 1] as [number, number, number, number],
+            ...smoothSpring,
+            duration: 0.7,
         },
     },
 }
 
 const floatVariants = {
     animate: {
-        y: [-10, 10, -10],
+        y: [-8, 8, -8],
         transition: {
-            duration: 6,
+            duration: 5,
             repeat: Infinity,
             ease: "easeInOut" as const,
         },
@@ -42,7 +44,7 @@ const floatVariants = {
 
 export function Hero() {
     return (
-        <section className="relative min-h-screen flex items-center justify-center pt-20 pb-16 overflow-hidden">
+        <SpotlightContainer className="relative min-h-screen flex items-center justify-center pt-20 pb-16 overflow-hidden">
             {/* === AURORA BACKGROUND SYSTEM === */}
             <div className="absolute inset-0 bg-slate-950" />
 
@@ -266,7 +268,7 @@ export function Hero() {
                                         <span className="text-slate-500">.</span>
                                         <span className="text-yellow-400">optimize</span>
                                         <span className="text-slate-500">(</span>
-                                        <span className="text-green-400">"revenue"</span>
+                                        <span className="text-green-400">&quot;revenue&quot;</span>
                                         <span className="text-slate-500">)</span>;
                                     </p>
                                     <motion.p
@@ -309,6 +311,6 @@ export function Hero() {
                     ))}
                 </motion.div>
             </div>
-        </section>
+        </SpotlightContainer>
     )
 }

@@ -1,9 +1,11 @@
 "use client"
 
 import { useRef } from "react"
-import { motion, useMotionTemplate, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion"
 import Link from "next/link"
 import { ArrowRight, Sparkles, Zap, Shield, Clock } from "lucide-react"
+import { AnimatedCounter } from "./animated-counter"
+import { smoothSpring } from "@/lib/animations"
 
 function MagneticButton({ children, href }: { children: React.ReactNode; href: string }) {
     const ref = useRef<HTMLAnchorElement>(null)
@@ -238,32 +240,66 @@ export function CTASection() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        transition={{ delay: 0.8 }}
+                        transition={smoothSpring}
                         className="mt-16 pt-12 border-t border-white/5"
                     >
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
-                            {[
-                                { value: "50+", label: "Companies Scaled" },
-                                { value: "10k+", label: "Calls Automated" },
-                                { value: "99.9%", label: "Uptime SLA" },
-                                { value: "<50ms", label: "Avg Latency" },
-                            ].map((stat, i) => (
-                                <motion.div
-                                    key={stat.label}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: 0.9 + i * 0.1 }}
-                                    className="text-center"
-                                >
-                                    <div className="text-2xl md:text-3xl font-bold text-white mb-1">
-                                        {stat.value}
-                                    </div>
-                                    <div className="text-xs text-slate-500 uppercase tracking-wider">
-                                        {stat.label}
-                                    </div>
-                                </motion.div>
-                            ))}
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ ...smoothSpring, delay: 0.1 }}
+                                className="text-center"
+                            >
+                                <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                                    <AnimatedCounter value={50} suffix="+" />
+                                </div>
+                                <div className="text-xs text-slate-500 uppercase tracking-wider">
+                                    Companies Scaled
+                                </div>
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ ...smoothSpring, delay: 0.2 }}
+                                className="text-center"
+                            >
+                                <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                                    <AnimatedCounter value={10} suffix="k+" />
+                                </div>
+                                <div className="text-xs text-slate-500 uppercase tracking-wider">
+                                    Calls Automated
+                                </div>
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ ...smoothSpring, delay: 0.3 }}
+                                className="text-center"
+                            >
+                                <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                                    <AnimatedCounter value={99.9} suffix="%" />
+                                </div>
+                                <div className="text-xs text-slate-500 uppercase tracking-wider">
+                                    Uptime SLA
+                                </div>
+                            </motion.div>
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ ...smoothSpring, delay: 0.4 }}
+                                className="text-center"
+                            >
+                                <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                                    <AnimatedCounter value={50} prefix="<" suffix="ms" />
+                                </div>
+                                <div className="text-xs text-slate-500 uppercase tracking-wider">
+                                    Avg Latency
+                                </div>
+                            </motion.div>
                         </div>
                     </motion.div>
                 </motion.div>

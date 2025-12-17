@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
-import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
+import { SpotlightContainer } from "@/components/ui/spotlight"
 import { ArrowRight, Briefcase, Heart, Zap, MapPin, Clock, Users, Sparkles } from "lucide-react"
 import Link from "next/link"
 
@@ -44,15 +44,15 @@ export default function CareersPageClient() {
                     {/* Badge */}
                     <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-sm font-medium">
                         <Users className="w-4 h-4" />
-                        <span>We're Hiring</span>
+                        <span>We&apos;re Hiring</span>
                     </div>
 
                     <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 tracking-tight">
                         Join the <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Revolution</span>
                     </h1>
                     <p className="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto mb-10 sm:mb-12 leading-relaxed">
-                        We're building the operating system for the automated enterprise.
-                        If you're obsessed with efficiency, AI, and beautiful code, you belong here.
+                        We&apos;re building the operating system for the automated enterprise.
+                        If you&apos;re obsessed with efficiency, AI, and beautiful code, you belong here.
                     </p>
 
                     {/* Values */}
@@ -146,7 +146,7 @@ export default function CareersPageClient() {
                         viewport={{ once: true }}
                         className="mt-16 text-center p-8 rounded-2xl bg-slate-900/30 border border-slate-800"
                     >
-                        <p className="text-slate-400 mb-4">Don't see your role?</p>
+                        <p className="text-slate-400 mb-4">Don&apos;t see your role?</p>
                         <Link
                             href="/contact"
                             className="group relative inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-full overflow-hidden transition-all hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.5)]"

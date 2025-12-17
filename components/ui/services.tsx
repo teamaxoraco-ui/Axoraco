@@ -5,6 +5,7 @@ import { Mic, Code, Network, ArrowUpRight, Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { MouseEvent, ComponentType } from "react"
 import Link from "next/link"
+import { SpotlightContainer } from "@/components/ui/spotlight"
 
 interface Service {
   id: number
@@ -150,7 +151,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
 export function Services() {
   return (
-    <section id="solutions" className="py-24 relative">
+    <SpotlightContainer className="py-24 relative">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -173,6 +174,6 @@ export function Services() {
           ))}
         </div>
       </div>
-    </section>
+    </SpotlightContainer>
   )
 }

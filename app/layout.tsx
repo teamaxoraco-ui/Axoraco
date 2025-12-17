@@ -5,6 +5,9 @@ import { GoogleTagManager, GoogleTagManagerNoScript } from "@/components/analyti
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { BackToTop } from "@/components/ui/back-to-top";
+import { SkipToContent } from "@/components/ui/skip-to-content";
+import { NavigationProgress } from "@/components/ui/navigation-progress";
+import { CookieConsent } from "@/components/ui/cookie-consent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -103,6 +106,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -159,6 +168,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* Accessibility: Skip to main content link */}
+        <SkipToContent />
+        {/* Navigation Progress Indicator */}
+        <NavigationProgress />
         {/* Global Premium Components - Available on ALL pages */}
         <ScrollProgress />
         <CustomCursor />
@@ -167,7 +180,11 @@ export default function RootLayout({
         <GoogleTagManagerNoScript containerId={GTM_CONTAINER_ID} />
         {/* Google Analytics */}
         <GoogleAnalytics measurementId={GA_MEASUREMENT_ID} />
-        {children}
+        <div id="main-content">
+          {children}
+        </div>
+        {/* Cookie Consent Banner */}
+        <CookieConsent />
       </body>
     </html>
   );

@@ -13,6 +13,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
         "/consulting",
         "/careers",
         "/blog",
+        "/privacy",
+        "/terms",
     ];
 
     return routes.map((route) => ({

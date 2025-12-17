@@ -118,4 +118,18 @@ export const pageMetadata = {
         keywords: ["Blog", "AI Insights", "Automation News", "Tech Articles"],
         path: "/blog",
     }),
+    privacy: generatePageMetadata({
+        title: "Privacy Policy",
+        description:
+            "Learn how Axoraco collects, uses, and protects your personal information.",
+        keywords: ["Privacy Policy", "Data Protection", "GDPR"],
+        path: "/privacy",
+    }),
+    terms: generatePageMetadata({
+        title: "Terms of Service",
+        description:
+            "Read the terms and conditions for using Axoraco's services and website.",
+        keywords: ["Terms of Service", "Legal", "Terms and Conditions"],
+        path: "/terms",
+    }),
 };

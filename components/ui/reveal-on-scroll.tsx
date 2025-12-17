@@ -14,7 +14,6 @@ export function RevealOnScroll({
     children,
     className = "",
     direction = "up",
-    delay = 0
 }: RevealOnScrollProps) {
     const ref = useRef<HTMLDivElement>(null)
     const { scrollYProgress } = useScroll({
@@ -24,16 +23,23 @@ export function RevealOnScroll({
 
     const opacity = useTransform(scrollYProgress, [0, 1], [0, 1])
 
-    const getTransform = () => {
+    // Pre-compute all possible transforms at the top level (hooks must be called unconditionally)
+    const transformUp = useTransform(scrollYProgress, [0, 1], [60, 0])
+    const transformDown = useTransform(scrollYProgress, [0, 1], [-60, 0])
+    const transformLeft = useTransform(scrollYProgress, [0, 1], [60, 0])
+    const transformRight = useTransform(scrollYProgress, [0, 1], [-60, 0])
+
+    // Select the appropriate transform based on direction
+    const getTransformForDirection = () => {
         switch (direction) {
-            case "up": return useTransform(scrollYProgress, [0, 1], [60, 0])
-            case "down": return useTransform(scrollYProgress, [0, 1], [-60, 0])
-            case "left": return useTransform(scrollYProgress, [0, 1], [60, 0])
-            case "right": return useTransform(scrollYProgress, [0, 1], [-60, 0])
+            case "up": return transformUp
+            case "down": return transformDown
+            case "left": return transformLeft
+            case "right": return transformRight
         }
     }
 
-    const transform = getTransform()
+    const transform = getTransformForDirection()
     const isHorizontal = direction === "left" || direction === "right"
 
     return (

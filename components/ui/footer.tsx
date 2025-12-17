@@ -1,7 +1,9 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { Github, Twitter, Linkedin, ArrowUpRight } from "lucide-react"
+import { Github, Twitter, Linkedin, ArrowUpRight, CheckCircle2, AlertCircle } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 const footerLinks = {
     solutions: [
@@ -28,7 +30,41 @@ const socialLinks = [
     { name: "LinkedIn", icon: Linkedin, href: "#" },
 ]
 
+type SubmitStatus = "idle" | "loading" | "success" | "error"
+
 export function Footer() {
+    const [email, setEmail] = useState("")
+    const [status, setStatus] = useState<SubmitStatus>("idle")
+    const [errorMessage, setErrorMessage] = useState("")
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!email) return
+
+        setStatus("loading")
+        setErrorMessage("")
+
+        try {
+            const response = await fetch("/api/newsletter", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            })
+
+            const data = await response.json()
+
+            if (!response.ok) {
+                throw new Error(data.error || "Subscription failed")
+            }
+
+            setStatus("success")
+            setEmail("")
+        } catch (error) {
+            setStatus("error")
+            setErrorMessage(error instanceof Error ? error.message : "Failed to subscribe")
+        }
+    }
+
     return (
         <footer className="bg-slate-950 border-t border-slate-800 relative overflow-hidden">
             {/* Subtle top glow */}
@@ -103,20 +139,56 @@ export function Footer() {
                         <p className="text-slate-400 text-sm mb-4">
                             Join 1,200+ operators. Weekly automation insights, zero fluff.
                         </p>
-                        <div className="flex flex-col gap-2 mt-6">
-                            <label htmlFor="newsletter-email" className="sr-only">Email address</label>
+
+                        {/* Success/Error Messages */}
+                        <AnimatePresence mode="wait">
+                            {status === "success" && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -5 }}
+                                    className="mb-4 p-3 rounded-lg bg-green-500/10 border border-green-500/30 flex items-center gap-2"
+                                    role="alert"
+                                >
+                                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                    <span className="text-green-400 text-sm">Subscribed!</span>
+                                </motion.div>
+                            )}
+                            {status === "error" && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -5 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -5 }}
+                                    className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-2"
+                                    role="alert"
+                                >
+                                    <AlertCircle className="w-4 h-4 text-red-500" />
+                                    <span className="text-red-400 text-sm">{errorMessage}</span>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-2 mt-6">
+                            <label htmlFor="footer-newsletter-email" className="sr-only">Email address</label>
                             <div className="flex gap-2">
                                 <input
-                                    id="newsletter-email"
+                                    id="footer-newsletter-email"
                                     type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
+                                    required
                                     className="flex-1 px-4 py-2.5 bg-slate-800/50 border border-slate-700 rounded-full text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                                 />
-                                <button className="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-full text-sm hover:shadow-[0_0_20px_-5px_rgba(99,102,241,0.5)] transition-all">
-                                    Subscribe
+                                <button
+                                    type="submit"
+                                    disabled={status === "loading"}
+                                    className="px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-full text-sm hover:shadow-[0_0_20px_-5px_rgba(99,102,241,0.5)] transition-all disabled:opacity-70"
+                                >
+                                    {status === "loading" ? "..." : "Subscribe"}
                                 </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
 

@@ -3,9 +3,8 @@
 import { motion } from "framer-motion"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
-import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
+import { SpotlightContainer } from "@/components/ui/spotlight"
 import { Calendar, User, ArrowRight, BookOpen, Sparkles } from "lucide-react"
-import Link from "next/link"
 
 const posts = [
     {
@@ -34,6 +33,24 @@ const posts = [
         tag: "Strategy",
         gradient: "from-purple-500 to-pink-500",
         readTime: "4 min read"
+    },
+    {
+        title: "How MedFirst Reduced No-Shows by 85%",
+        excerpt: "A deep dive into our healthcare client's AI appointment system that transformed patient scheduling.",
+        date: "Oct 20, 2024",
+        author: "Daksh",
+        tag: "Case Studies",
+        gradient: "from-green-500 to-emerald-500",
+        readTime: "6 min read"
+    },
+    {
+        title: "Building Real-Time Analytics at Scale",
+        excerpt: "The architecture behind our client dashboards that process millions of events per second.",
+        date: "Oct 08, 2024",
+        author: "Aniket",
+        tag: "Engineering",
+        gradient: "from-orange-500 to-red-500",
+        readTime: "10 min read"
     }
 ]
 

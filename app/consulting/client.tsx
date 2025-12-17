@@ -3,7 +3,7 @@
 import { motion } from "framer-motion"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
-import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
+import { SpotlightContainer } from "@/components/ui/spotlight"
 import { Calendar, CheckCircle2, Clock, Video, Users, Sparkles } from "lucide-react"
 
 const benefits = [
@@ -36,7 +36,7 @@ export default function ConsultingPageClient() {
                                 Book a <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">Strategy Session</span>
                             </h1>
                             <p className="text-lg sm:text-xl text-slate-300 mb-6 sm:mb-8 leading-relaxed">
-                                Let's discuss your automation roadmap. In this complimentary 30-minute call, we will:
+                                Let&apos;s discuss your automation roadmap. In this complimentary 30-minute call, we will:
                             </p>
 
                             <ul className="space-y-4 mb-12">
@@ -77,7 +77,7 @@ export default function ConsultingPageClient() {
                                     <span className="text-xs text-indigo-400 uppercase tracking-wider font-medium">Client Feedback</span>
                                 </div>
                                 <p className="text-slate-300 italic leading-relaxed">
-                                    "The strategy session alone was worth more than the entire project cost with our previous agency."
+                                    &ldquo;The strategy session alone was worth more than the entire project cost with our previous agency.&rdquo;
                                 </p>
                                 <div className="mt-4 text-sm font-bold text-white">
                                     — CEO, TechFlow
@@ -98,7 +98,7 @@ export default function ConsultingPageClient() {
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-3">Select a Time</h3>
                                 <p className="text-slate-400 text-sm mb-8 max-w-xs mx-auto">
-                                    Choose a time slot that works for your schedule. We're available globally.
+                                    Choose a time slot that works for your schedule. We&apos;re available globally.
                                 </p>
 
                                 {/* Fake calendar slots */}

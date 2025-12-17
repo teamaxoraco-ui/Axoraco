@@ -33,7 +33,7 @@ export function SpotlightCard({
             className={cn("group relative", className)}
         >
             <motion.div
-                className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 transition duration-300 group-hover:opacity-100"
+                className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 transition duration-300 group-hover:opacity-100 z-10"
                 style={{
                     background: useMotionTemplate`radial-gradient(600px circle at ${mouseX}px ${mouseY}px, ${spotlightColor}, transparent 80%)`,
                 }}
@@ -52,7 +52,7 @@ interface SpotlightContainerProps {
 export function SpotlightContainer({
     children,
     className,
-    spotlightColor = "rgba(99, 102, 241, 0.08)"
+    spotlightColor = "rgba(99, 102, 241, 0.12)"
 }: SpotlightContainerProps) {
     const ref = useRef<HTMLDivElement>(null)
     const mouseX = useMotionValue(0)
@@ -71,13 +71,15 @@ export function SpotlightContainer({
             onMouseMove={handleMouseMove}
             className={cn("relative", className)}
         >
+            {children}
+            {/* Spotlight overlay - renders on top of all content */}
             <motion.div
-                className="pointer-events-none absolute inset-0"
+                className="pointer-events-none absolute inset-0 z-20"
                 style={{
-                    background: useMotionTemplate`radial-gradient(800px circle at ${mouseX}px ${mouseY}px, ${spotlightColor}, transparent 60%)`,
+                    background: useMotionTemplate`radial-gradient(800px circle at ${mouseX}px ${mouseY}px, ${spotlightColor}, transparent 50%)`,
                 }}
             />
-            {children}
         </div>
     )
 }
+

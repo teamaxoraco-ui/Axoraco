@@ -99,7 +99,7 @@ export function Testimonials() {
 
                                     {/* Quote Text */}
                                     <p className="text-lg text-slate-300 mb-8 leading-relaxed">
-                                        "{testimonial.quote}"
+                                        &ldquo;{testimonial.quote}&rdquo;
                                     </p>
 
                                     {/* Author */}
