@@ -123,7 +123,7 @@ export function Hero() {
                     {/* Headline */}
                     <motion.h1
                         variants={itemVariants}
-                        className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight text-white mb-6 leading-[1.05]"
+                        className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold tracking-tight text-white mb-4 sm:mb-6 leading-[1.08]"
                     >
                         Automating Reality.
                         <br />
@@ -144,7 +144,7 @@ export function Hero() {
                     {/* Subheadline */}
                     <motion.p
                         variants={itemVariants}
-                        className="text-lg md:text-xl text-slate-300 mb-10 leading-relaxed max-w-lg"
+                        className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-10 leading-relaxed max-w-lg"
                     >
                         Axoraco merges intelligent AI Voice Bots with bespoke Web Architecture
                         to scale your operations beyond human limits.
@@ -186,7 +186,7 @@ export function Hero() {
                     {/* Trust Badges - Unified colors */}
                     <motion.div
                         variants={itemVariants}
-                        className="mt-8 flex flex-wrap items-center gap-6 text-sm text-slate-400"
+                        className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-6 text-xs sm:text-sm text-slate-400"
                     >
                         <div className="flex items-center gap-2">
                             <Shield className="w-4 h-4 text-indigo-400" aria-hidden="true" />

@@ -151,7 +151,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
 export function Services() {
   return (
-    <SpotlightContainer className="py-24 relative">
+    <SpotlightContainer className="py-16 sm:py-20 md:py-24 relative">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -160,10 +160,10 @@ export function Services() {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
             Intelligent Solutions
           </h2>
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+          <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base md:text-lg px-4">
             Scalable technology designed to automate workflows and enhance user experience.
           </p>
         </motion.div>

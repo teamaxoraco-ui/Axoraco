@@ -40,10 +40,17 @@ export default function ContactPageClient() {
         setErrorMessage("")
 
         try {
+            // Combine firstName and lastName for the API
+            const payload = {
+                name: `${formData.firstName} ${formData.lastName}`.trim(),
+                email: formData.email,
+                message: formData.message,
+            }
+
             const response = await fetch("/api/contact", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(payload),
             })
 
             const data = await response.json()
@@ -190,13 +197,12 @@ export default function ContactPageClient() {
                                             />
                                         </div>
                                         <div className="space-y-1 sm:space-y-2">
-                                            <label htmlFor="lastName" className="text-xs sm:text-sm font-medium text-slate-300">Last Name</label>
+                                            <label htmlFor="lastName" className="text-xs sm:text-sm font-medium text-slate-300">Last Name <span className="text-slate-500">(optional)</span></label>
                                             <input
                                                 type="text"
                                                 id="lastName"
                                                 value={formData.lastName}
                                                 onChange={handleChange}
-                                                required
                                                 className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
                                                 placeholder="Doe"
                                             />

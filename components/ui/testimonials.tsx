@@ -43,7 +43,7 @@ const testimonials: Testimonial[] = [
 
 export function Testimonials() {
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
@@ -61,16 +61,16 @@ export function Testimonials() {
                         <Star className="w-4 h-4 fill-purple-400" aria-hidden="true" />
                         <span>Client Success Stories</span>
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4 tracking-tight">
                         Trusted by Industry Leaders
                     </h2>
-                    <p className="text-slate-400 text-lg max-w-xl mx-auto">
+                    <p className="text-slate-400 text-sm sm:text-base md:text-lg max-w-xl mx-auto px-4">
                         See what our partners say about automating with Axoraco.
                     </p>
                 </motion.div>
 
                 {/* Testimonials Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                     {testimonials.map((testimonial, index) => (
                         <SpotlightCard
                             key={testimonial.id}
@@ -82,7 +82,7 @@ export function Testimonials() {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.15, duration: 0.5 }}
-                                className="relative p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm hover:border-purple-500/30 transition-all duration-500 h-full"
+                                className="relative p-5 sm:p-6 md:p-8 rounded-3xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm hover:border-purple-500/30 transition-all duration-500 h-full"
                             >
                                 <div className="relative z-10">
                                     {/* Quote Icon */}

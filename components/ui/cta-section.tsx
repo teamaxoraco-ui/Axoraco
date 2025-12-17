@@ -63,7 +63,7 @@ export function CTASection() {
         <section
             ref={containerRef}
             onMouseMove={handleMouseMove}
-            className="py-32 relative overflow-hidden"
+            className="py-16 sm:py-24 md:py-32 relative overflow-hidden"
         >
             {/* === BACKGROUND SYSTEM === */}
             <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-950 to-indigo-950/50" />
@@ -138,7 +138,7 @@ export function CTASection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.3 }}
-                        className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 tracking-tight leading-[1.1]"
+                        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 sm:mb-8 tracking-tight leading-[1.1]"
                     >
                         Ready to{" "}
                         <span className="relative inline-block">
@@ -163,7 +163,7 @@ export function CTASection() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: 0.4 }}
-                        className="text-xl md:text-2xl text-slate-300 mb-12 leading-relaxed max-w-2xl mx-auto"
+                        className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-300 mb-8 sm:mb-12 leading-relaxed max-w-2xl mx-auto px-4"
                     >
                         Join the forward-thinking companies using Axoraco to
                         scale without limits. Your transformation starts with one conversation.
@@ -182,7 +182,7 @@ export function CTASection() {
                             <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full blur-lg opacity-40 group-hover:opacity-70 transition-opacity duration-500" />
 
                             {/* Button */}
-                            <div className="relative px-10 py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-lg rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_50px_-5px_rgba(99,102,241,0.6)]">
+                            <div className="relative px-6 sm:px-8 md:px-10 py-4 sm:py-5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-base sm:text-lg rounded-full overflow-hidden transition-all duration-300 group-hover:shadow-[0_0_50px_-5px_rgba(99,102,241,0.6)]">
                                 {/* Animated gradient overlay */}
                                 <motion.div
                                     className="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
