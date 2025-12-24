@@ -23,10 +23,10 @@ export const companyInfo = {
         mapsLink: "https://www.google.com/maps/search/Vadodara+Gujarat+India",
     },
     social: {
-        twitter: "https://x.com/teamaxoraco",
-        linkedin: "https://linkedin.com/company/axoraco",
+        twitter: "https://x.com/TeamAxoraco",
+        linkedin: "https://www.linkedin.com/in/axoraco-co-062b8639b/",
         github: "https://github.com/teamaxoraco-ui",
-        instagram: "https://instagram.com/teamaxoraco",
+        instagram: "https://www.instagram.com/axoraco/",
     },
     calendly: "https://calendly.com/team-axoraco/30min",
 };

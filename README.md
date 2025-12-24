@@ -71,4 +71,4 @@ Private - All rights reserved.
 
 ---
 
-Built with ❤️ by [Axoraco](https://axoraco.com)
+Built with ❤️ by [Axoraco](https://axoraco.vercel.app/)
