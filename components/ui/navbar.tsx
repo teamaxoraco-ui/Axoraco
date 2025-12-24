@@ -41,19 +41,22 @@ export function Navbar() {
                 "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
                 isScrolled ? "glass py-4" : "bg-transparent py-6"
             )}
+            role="navigation"
+            aria-label="Main navigation"
         >
             <div className="container mx-auto px-6 flex items-center justify-between">
-                <Link href="/" className="text-2xl font-bold tracking-tighter text-white">
+                <Link href="/" className="text-2xl font-bold tracking-tighter text-white" aria-label="Axoraco Home">
                     AXORACO
                 </Link>
 
                 {/* Desktop Links */}
-                <div className="hidden md:flex items-center gap-8">
+                <div className="hidden md:flex items-center gap-8" role="menubar" aria-label="Main menu">
                     {navLinks.map((link) => (
                         <Link
                             key={link.name}
                             href={link.href}
                             className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
+                            role="menuitem"
                         >
                             {link.name}
                         </Link>
@@ -114,6 +117,8 @@ export function Navbar() {
                             backdropFilter: "blur(24px)",
                             WebkitBackdropFilter: "blur(24px)",
                         }}
+                        role="menu"
+                        aria-label="Mobile navigation menu"
                     >
                         <div className="flex flex-col p-6 gap-2">
                             {navLinks.map((link, index) => (

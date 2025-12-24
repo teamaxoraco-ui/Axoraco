@@ -2,7 +2,23 @@
 
 import { motion, Variants } from "framer-motion";
 
-// Smooth spring config for natural motion
+/**
+ * @fileoverview Animation utilities and Framer Motion configurations.
+ * Provides reusable spring configs, animation variants, and React components
+ * for consistent animations across the application.
+ */
+
+// =============================================================================
+// SPRING CONFIGURATIONS
+// =============================================================================
+
+/**
+ * Smooth spring config for natural motion.
+ * Best for: page transitions, scroll reveals, general UI animations.
+ * 
+ * @example
+ * <motion.div transition={smoothSpring} />
+ */
 export const smoothSpring = {
     type: "spring" as const,
     stiffness: 100,
@@ -10,14 +26,26 @@ export const smoothSpring = {
     mass: 1,
 };
 
-// Fast spring for snappy interactions
+/**
+ * Fast spring for snappy interactions.
+ * Best for: hover effects, button clicks, quick feedback.
+ * 
+ * @example
+ * <motion.button whileHover={{ scale: 1.05 }} transition={snappySpring} />
+ */
 export const snappySpring = {
     type: "spring" as const,
     stiffness: 400,
     damping: 30,
 };
 
-// Slow spring for dramatic reveals
+/**
+ * Slow spring for dramatic reveals.
+ * Best for: hero sections, modals, important content reveals.
+ * 
+ * @example
+ * <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={dramaticSpring} />
+ */
 export const dramaticSpring = {
     type: "spring" as const,
     stiffness: 50,
@@ -25,10 +53,23 @@ export const dramaticSpring = {
     mass: 1.5,
 };
 
-// Buttery smooth easing
+/**
+ * Buttery smooth easing curve (cubic-bezier).
+ * Best for: timed animations, CSS-like transitions.
+ * 
+ * @example
+ * transition={{ duration: 0.5, ease: smoothEase }}
+ */
 export const smoothEase = [0.25, 0.46, 0.45, 0.94];
 
-// Animation variants for reuse
+// =============================================================================
+// ANIMATION VARIANTS
+// =============================================================================
+
+/**
+ * Fade in from below with opacity.
+ * Best for: content reveals on scroll, staggered lists.
+ */
 export const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
@@ -38,6 +79,10 @@ export const fadeInUp: Variants = {
     },
 };
 
+/**
+ * Fade in from above with opacity.
+ * Best for: dropdowns, modals, top-positioned content.
+ */
 export const fadeInDown: Variants = {
     hidden: { opacity: 0, y: -30 },
     visible: {
@@ -47,6 +92,10 @@ export const fadeInDown: Variants = {
     },
 };
 
+/**
+ * Fade in from the left.
+ * Best for: sidebar content, alternating list items.
+ */
 export const fadeInLeft: Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: {
@@ -56,6 +105,10 @@ export const fadeInLeft: Variants = {
     },
 };
 
+/**
+ * Fade in from the right.
+ * Best for: sidebar content, alternating list items.
+ */
 export const fadeInRight: Variants = {
     hidden: { opacity: 0, x: 50 },
     visible: {
@@ -65,6 +118,10 @@ export const fadeInRight: Variants = {
     },
 };
 
+/**
+ * Scale in with opacity.
+ * Best for: modals, cards, focused content.
+ */
 export const scaleIn: Variants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: {
@@ -74,6 +131,16 @@ export const scaleIn: Variants = {
     },
 };
 
+/**
+ * Container variant for staggered children.
+ * Apply to parent with children using staggerItem.
+ * 
+ * @example
+ * <motion.div variants={staggerContainer} initial="hidden" animate="visible">
+ *   <motion.div variants={staggerItem}>Item 1</motion.div>
+ *   <motion.div variants={staggerItem}>Item 2</motion.div>
+ * </motion.div>
+ */
 export const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -85,6 +152,10 @@ export const staggerContainer: Variants = {
     },
 };
 
+/**
+ * Individual item variant for staggered animations.
+ * Use with staggerContainer parent.
+ */
 export const staggerItem: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -94,26 +165,48 @@ export const staggerItem: Variants = {
     },
 };
 
-// Hover animations
+// =============================================================================
+// HOVER & TAP ANIMATIONS
+// =============================================================================
+
+/**
+ * Subtle scale on hover.
+ * Apply to whileHover prop.
+ */
 export const hoverScale = {
     scale: 1.02,
     transition: snappySpring,
 };
 
+/**
+ * Lift effect on hover (moves up).
+ * Apply to whileHover prop.
+ */
 export const hoverLift = {
     y: -5,
     transition: snappySpring,
 };
 
+/**
+ * Glow box-shadow on hover.
+ * Apply to whileHover prop.
+ */
 export const hoverGlow = {
     boxShadow: "0 0 30px rgba(99, 102, 241, 0.4)",
     transition: { duration: 0.3 },
 };
 
-// Tap animations
+/**
+ * Subtle scale down on tap/click.
+ * Apply to whileTap prop.
+ */
 export const tapScale = {
     scale: 0.98,
 };
+
+// =============================================================================
+// REACT COMPONENTS
+// =============================================================================
 
 interface SmoothRevealProps {
     children: React.ReactNode;
@@ -123,7 +216,18 @@ interface SmoothRevealProps {
 }
 
 /**
- * Smooth reveal animation wrapper
+ * Smooth reveal animation wrapper component.
+ * Animates children when they enter the viewport.
+ * 
+ * @param children - Content to animate
+ * @param delay - Animation delay in seconds (default: 0)
+ * @param direction - Direction to animate from (default: "up")
+ * @param className - Additional CSS classes
+ * 
+ * @example
+ * <SmoothReveal direction="up" delay={0.2}>
+ *   <h1>Hello World</h1>
+ * </SmoothReveal>
  */
 export function SmoothReveal({
     children,
@@ -158,7 +262,18 @@ interface StaggerChildrenProps {
 }
 
 /**
- * Container for staggered children animations
+ * Container component for staggered children animations.
+ * Animates children sequentially when entering viewport.
+ * 
+ * @param children - Child elements to animate
+ * @param staggerDelay - Delay between each child animation (default: 0.1)
+ * @param className - Additional CSS classes
+ * 
+ * @example
+ * <StaggerChildren staggerDelay={0.15}>
+ *   <StaggerItem><Card /></StaggerItem>
+ *   <StaggerItem><Card /></StaggerItem>
+ * </StaggerChildren>
  */
 export function StaggerChildren({
     children,
@@ -187,7 +302,16 @@ export function StaggerChildren({
 }
 
 /**
- * Child item for StaggerChildren
+ * Individual item for use inside StaggerChildren.
+ * Fades in with upward movement.
+ * 
+ * @param children - Content to animate
+ * @param className - Additional CSS classes
+ * 
+ * @example
+ * <StaggerItem className="mb-4">
+ *   <Card />
+ * </StaggerItem>
  */
 export function StaggerItem({
     children,
@@ -204,7 +328,17 @@ export function StaggerItem({
 }
 
 /**
- * Smooth magnetic hover effect
+ * Component with magnetic hover effect.
+ * Scales slightly on hover with spring physics.
+ * 
+ * @param children - Content to wrap
+ * @param strength - Effect strength multiplier (default: 0.3)
+ * @param className - Additional CSS classes
+ * 
+ * @example
+ * <MagneticHover strength={0.5}>
+ *   <button>Click Me</button>
+ * </MagneticHover>
  */
 export function MagneticHover({
     children,

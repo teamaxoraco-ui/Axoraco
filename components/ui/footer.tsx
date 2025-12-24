@@ -66,7 +66,11 @@ export function Footer() {
     }
 
     return (
-        <footer className="bg-slate-950 border-t border-slate-800 relative overflow-hidden">
+        <footer
+            className="bg-slate-950 border-t border-slate-800 relative overflow-hidden"
+            role="contentinfo"
+            aria-label="Site footer"
+        >
             {/* Subtle top glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-indigo-600/5 rounded-full blur-[100px] pointer-events-none" />
 

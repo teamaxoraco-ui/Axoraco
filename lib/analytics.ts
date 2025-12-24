@@ -1,19 +1,37 @@
 /**
- * Analytics event tracking utility
- * Provides type-safe event tracking for GA4
+ * @fileoverview Analytics event tracking utility for Google Analytics 4.
+ * Provides type-safe event tracking with pre-defined event categories
+ * and conversion tracking helpers.
  */
 
+/**
+ * Analytics event category types.
+ * Used to group events for analysis in GA4.
+ */
 type EventCategory = "form" | "navigation" | "engagement" | "conversion";
 
+/**
+ * Parameters for tracking a custom event.
+ */
 interface TrackEventParams {
+    /** Event category for grouping */
     category: EventCategory;
+    /** Specific action being tracked */
     action: string;
+    /** Optional label for additional context */
     label?: string;
+    /** Optional numeric value */
     value?: number;
 }
 
 /**
- * Track a custom event to Google Analytics
+ * Track a custom event to Google Analytics.
+ * Falls back to console logging in development.
+ * 
+ * @param params - Event tracking parameters
+ * 
+ * @example
+ * trackEvent({ category: "form", action: "submit", label: "contact-form" })
  */
 export function trackEvent({ category, action, label, value }: TrackEventParams): void {
     if (typeof window === "undefined" || !window.gtag) {
@@ -29,55 +47,129 @@ export function trackEvent({ category, action, label, value }: TrackEventParams)
 }
 
 /**
- * Pre-defined event trackers for common actions
+ * Pre-defined event trackers for common actions.
+ * Use these for consistent event naming across the application.
+ * 
+ * @example
+ * // Track form submission
+ * analytics.formSubmit("contact")
+ * 
+ * // Track CTA click
+ * analytics.ctaClick("Get Started", "hero-section")
+ * 
+ * // Track service page interest
+ * analytics.serviceInterest("AI Voice Bots")
  */
 export const analytics = {
-    // Form submissions
+    // =========================================================================
+    // FORM EVENTS
+    // =========================================================================
+
+    /**
+     * Track successful form submission.
+     * @param formName - Name of the form
+     */
     formSubmit: (formName: string) =>
         trackEvent({ category: "form", action: "submit", label: formName }),
 
+    /**
+     * Track form validation or submission error.
+     * @param formName - Name of the form
+     * @param error - Error message or type
+     */
     formError: (formName: string, error: string) =>
         trackEvent({ category: "form", action: "error", label: `${formName}: ${error}` }),
 
-    // CTA clicks
+    // =========================================================================
+    // CONVERSION EVENTS
+    // =========================================================================
+
+    /**
+     * Track CTA button clicks.
+     * @param ctaName - Name of the CTA (e.g., "Get Started", "Book Demo")
+     * @param location - Where the CTA is located (e.g., "hero", "footer")
+     */
     ctaClick: (ctaName: string, location: string) =>
         trackEvent({ category: "conversion", action: "cta_click", label: `${ctaName} - ${location}` }),
 
-    // Navigation
-    pageView: (pagePath: string) =>
-        trackEvent({ category: "navigation", action: "page_view", label: pagePath }),
-
-    externalLink: (url: string) =>
-        trackEvent({ category: "navigation", action: "external_link", label: url }),
-
-    // Engagement
-    scrollDepth: (depth: number) =>
-        trackEvent({ category: "engagement", action: "scroll_depth", value: depth }),
-
-    timeOnPage: (seconds: number) =>
-        trackEvent({ category: "engagement", action: "time_on_page", value: seconds }),
-
-    search: (query: string) =>
-        trackEvent({ category: "engagement", action: "search", label: query }),
-
-    // Service interest
+    /**
+     * Track interest in a specific service.
+     * @param serviceName - Name of the service
+     */
     serviceInterest: (serviceName: string) =>
         trackEvent({ category: "conversion", action: "service_interest", label: serviceName }),
 
-    // Newsletter
+    /**
+     * Track newsletter signup.
+     */
     newsletterSignup: () =>
         trackEvent({ category: "conversion", action: "newsletter_signup" }),
 
-    // Contact
+    /**
+     * Track contact form submission.
+     */
     contactFormSubmit: () =>
         trackEvent({ category: "conversion", action: "contact_form_submit" }),
 
+    /**
+     * Track consulting/demo booking.
+     */
     consultingBooking: () =>
         trackEvent({ category: "conversion", action: "consulting_booking" }),
+
+    // =========================================================================
+    // NAVIGATION EVENTS
+    // =========================================================================
+
+    /**
+     * Track page views (useful for SPAs).
+     * @param pagePath - Path of the page
+     */
+    pageView: (pagePath: string) =>
+        trackEvent({ category: "navigation", action: "page_view", label: pagePath }),
+
+    /**
+     * Track external link clicks.
+     * @param url - URL of the external link
+     */
+    externalLink: (url: string) =>
+        trackEvent({ category: "navigation", action: "external_link", label: url }),
+
+    // =========================================================================
+    // ENGAGEMENT EVENTS
+    // =========================================================================
+
+    /**
+     * Track scroll depth milestones.
+     * @param depth - Scroll depth percentage (25, 50, 75, 100)
+     */
+    scrollDepth: (depth: number) =>
+        trackEvent({ category: "engagement", action: "scroll_depth", value: depth }),
+
+    /**
+     * Track time spent on page.
+     * @param seconds - Time in seconds
+     */
+    timeOnPage: (seconds: number) =>
+        trackEvent({ category: "engagement", action: "time_on_page", value: seconds }),
+
+    /**
+     * Track search queries.
+     * @param query - Search query string
+     */
+    search: (query: string) =>
+        trackEvent({ category: "engagement", action: "search", label: query }),
 };
 
 /**
- * Hook to track scroll depth
+ * Initialize scroll depth tracking.
+ * Tracks when users scroll to 25%, 50%, 75%, and 100% of the page.
+ * Should be called once on page mount.
+ * 
+ * @example
+ * useEffect(() => {
+ *   useScrollDepthTracking();
+ * }, []);
  */
 export function useScrollDepthTracking(): void {
     if (typeof window === "undefined") return;
@@ -105,7 +197,13 @@ export function useScrollDepthTracking(): void {
     window.addEventListener("scroll", handleScroll, { passive: true });
 }
 
-// Type declaration for gtag
+// =============================================================================
+// TYPE DECLARATIONS
+// =============================================================================
+
+/**
+ * Global type declaration for Google Analytics gtag function.
+ */
 declare global {
     interface Window {
         gtag?: (...args: unknown[]) => void;
