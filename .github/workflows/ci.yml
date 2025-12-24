@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  lint-and-build:
-    name: Lint & Build
+  lint-and-typecheck:
+    name: Lint & Type Check
     runs-on: ubuntu-latest
     
     steps:
@@ -27,6 +27,27 @@ jobs:
       - name: Lint
         run: npm run lint
       
+      - name: Type Check
+        run: npx tsc --noEmit
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      
+      - name: Install dependencies
+        run: npm ci
+      
       - name: Build
         run: npm run build
         env:
@@ -34,10 +55,17 @@ jobs:
           NEXT_PUBLIC_GA_MEASUREMENT_ID: ""
           NEXT_PUBLIC_GTM_CONTAINER_ID: ""
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: .next
+          retention-days: 1
+
   test:
-    name: Test
+    name: Unit Tests
     runs-on: ubuntu-latest
-    needs: lint-and-build
+    needs: lint-and-typecheck
     
     steps:
       - name: Checkout
@@ -53,15 +81,22 @@ jobs:
         run: npm ci
       
       - name: Install test dependencies
-        run: npm install -D jest @testing-library/react @testing-library/jest-dom jest-environment-jsdom
+        run: npm install -D jest @testing-library/react @testing-library/jest-dom jest-environment-jsdom @types/jest
       
       - name: Run unit tests
-        run: npm test -- --passWithNoTests
+        run: npm test -- --coverage --passWithNoTests
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+          retention-days: 7
 
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
-    needs: lint-and-build
+    needs: build
     
     steps:
       - name: Checkout
@@ -79,12 +114,91 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps chromium
       
-      - name: Build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_SITE_URL: https://axoraco.vercel.app
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: .next
       
       - name: Run E2E tests
         run: npx playwright test --project=chromium
         env:
           CI: true
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+
+  lighthouse:
+    name: Lighthouse Audit
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: .next
+      
+      - name: Start server
+        run: npm start &
+        env:
+          PORT: 3000
+      
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 60000
+      
+      - name: Run Lighthouse
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:3000
+            http://localhost:3000/about
+            http://localhost:3000/contact
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run npm audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+      
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ""
+          extra_args: --only-verified
