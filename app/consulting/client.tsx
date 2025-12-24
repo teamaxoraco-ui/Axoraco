@@ -4,7 +4,8 @@ import { motion } from "framer-motion"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
 import { SpotlightContainer } from "@/components/ui/spotlight"
-import { Calendar, CheckCircle2, Clock, Video, Users, Sparkles } from "lucide-react"
+import { Calendar, CheckCircle2, Clock, Video, Users, Sparkles, ExternalLink } from "lucide-react"
+import { companyInfo } from "@/lib/json-ld"
 
 const benefits = [
     "Audit your current workflows",
@@ -89,9 +90,9 @@ export default function ConsultingPageClient() {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.2, duration: 0.6 }}
-                            className="bg-slate-900/60 border border-slate-800 rounded-3xl p-2 min-h-[600px] flex items-center justify-center relative overflow-hidden backdrop-blur-sm"
+                            className="bg-slate-900/60 border border-slate-800 rounded-3xl p-2 min-h-[600px] flex flex-col items-center justify-center relative overflow-hidden backdrop-blur-sm"
                         >
-                            {/* Calendar Placeholder */}
+                            {/* Calendly CTA */}
                             <div className="text-center p-8">
                                 <div className="w-20 h-20 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
                                     <Calendar className="w-10 h-10 text-indigo-400" />
@@ -101,20 +102,24 @@ export default function ConsultingPageClient() {
                                     Choose a time slot that works for your schedule. We&apos;re available globally.
                                 </p>
 
-                                {/* Fake calendar slots */}
-                                <div className="space-y-3 max-w-xs mx-auto">
-                                    {["Today, 2:00 PM", "Tomorrow, 10:00 AM", "Tomorrow, 3:00 PM"].map((time, i) => (
-                                        <button
-                                            key={i}
-                                            className="w-full p-4 rounded-xl bg-slate-800/50 border border-slate-700 text-slate-300 hover:border-indigo-500/50 hover:text-white hover:bg-indigo-500/10 transition-all text-sm font-medium"
-                                        >
-                                            {time}
-                                        </button>
-                                    ))}
-                                </div>
+                                {/* Calendly Button */}
+                                <a
+                                    href={companyInfo.calendly}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_30px_-5px_rgba(99,102,241,0.5)]"
+                                    aria-label="Book a call on Calendly"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                                    <span className="relative flex items-center gap-2">
+                                        <Calendar className="w-5 h-5" />
+                                        Book Your Free Call
+                                        <ExternalLink className="w-4 h-4" />
+                                    </span>
+                                </a>
 
                                 <p className="text-xs text-slate-500 mt-6">
-                                    (Calendly embed would go here in production)
+                                    Powered by Calendly
                                 </p>
                             </div>
 
@@ -130,3 +135,4 @@ export default function ConsultingPageClient() {
         </main>
     )
 }
+

@@ -1,4 +1,35 @@
+/**
+ * @fileoverview JSON-LD structured data for SEO and rich search results.
+ * Contains organization, website, and local business schemas.
+ */
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://axoraco.com";
+
+/**
+ * Company contact information - centralized for consistency
+ */
+export const companyInfo = {
+    name: "Axoraco",
+    phone: "+1 272 213 3651",
+    phoneFormatted: "+1 (272) 213-3651",
+    phoneLink: "tel:+12722133651",
+    email: "team.axoraco@gmail.com",
+    emailLink: "mailto:team.axoraco@gmail.com",
+    address: {
+        street: "Vadodara",
+        city: "Gujarat",
+        country: "India",
+        full: "Vadodara, Gujarat, India",
+        mapsLink: "https://www.google.com/maps/search/Vadodara+Gujarat+India",
+    },
+    social: {
+        twitter: "https://x.com/teamaxoraco",
+        linkedin: "https://linkedin.com/company/axoraco",
+        github: "https://github.com/teamaxoraco-ui",
+        instagram: "https://instagram.com/teamaxoraco",
+    },
+    calendly: "https://calendly.com/team-axoraco/30min",
+};
 
 export interface JsonLdData {
     organization: object;
@@ -10,7 +41,7 @@ export const jsonLd: JsonLdData = {
     organization: {
         "@context": "https://schema.org",
         "@type": "Organization",
-        name: "Axoraco",
+        name: companyInfo.name,
         url: siteUrl,
         logo: `${siteUrl}/icon-512.png`,
         description: "Enterprise AI Voice Bots and Web Development solutions that automate reality and elevate business.",
@@ -27,29 +58,28 @@ export const jsonLd: JsonLdData = {
         ],
         address: {
             "@type": "PostalAddress",
-            streetAddress: "123 Innovation Dr, Suite 400",
-            addressLocality: "Tech City",
-            addressRegion: "TC",
-            postalCode: "90210",
-            addressCountry: "US",
+            addressLocality: companyInfo.address.street,
+            addressRegion: companyInfo.address.city,
+            addressCountry: "IN",
         },
         contactPoint: {
             "@type": "ContactPoint",
-            telephone: "+1-555-123-4567",
+            telephone: companyInfo.phone,
             contactType: "customer service",
-            email: "hello@axoraco.com",
-            availableLanguage: ["English"],
+            email: companyInfo.email,
+            availableLanguage: ["English", "Hindi"],
         },
         sameAs: [
-            "https://twitter.com/axoraco",
-            "https://linkedin.com/company/axoraco",
-            "https://github.com/axoraco",
+            companyInfo.social.twitter,
+            companyInfo.social.linkedin,
+            companyInfo.social.github,
+            companyInfo.social.instagram,
         ],
     },
     website: {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: "Axoraco",
+        name: companyInfo.name,
         url: siteUrl,
         description: "AI Voice Bots & Web Development - Automating Reality, Elevating Business",
         potentialAction: {
@@ -64,19 +94,23 @@ export const jsonLd: JsonLdData = {
     localBusiness: {
         "@context": "https://schema.org",
         "@type": "ProfessionalService",
-        name: "Axoraco",
+        name: companyInfo.name,
         image: `${siteUrl}/og-image.png`,
         "@id": siteUrl,
         url: siteUrl,
-        telephone: "+1-555-123-4567",
+        telephone: companyInfo.phone,
+        email: companyInfo.email,
         priceRange: "$$$$",
         address: {
             "@type": "PostalAddress",
-            streetAddress: "123 Innovation Dr, Suite 400",
-            addressLocality: "Tech City",
-            addressRegion: "TC",
-            postalCode: "90210",
-            addressCountry: "US",
+            addressLocality: companyInfo.address.street,
+            addressRegion: companyInfo.address.city,
+            addressCountry: "IN",
+        },
+        geo: {
+            "@type": "GeoCoordinates",
+            latitude: "22.3072",
+            longitude: "73.1812",
         },
         openingHoursSpecification: {
             "@type": "OpeningHoursSpecification",

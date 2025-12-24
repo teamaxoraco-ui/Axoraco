@@ -2,8 +2,9 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Github, Twitter, Linkedin, ArrowUpRight, CheckCircle2, AlertCircle } from "lucide-react"
+import { Github, Twitter, Linkedin, ArrowUpRight, CheckCircle2, AlertCircle, Instagram } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import { companyInfo } from "@/lib/json-ld"
 
 const footerLinks = {
     solutions: [
@@ -25,9 +26,10 @@ const footerLinks = {
 }
 
 const socialLinks = [
-    { name: "Twitter", icon: Twitter, href: "#" },
-    { name: "GitHub", icon: Github, href: "#" },
-    { name: "LinkedIn", icon: Linkedin, href: "#" },
+    { name: "Twitter / X", icon: Twitter, href: companyInfo.social.twitter },
+    { name: "GitHub", icon: Github, href: companyInfo.social.github },
+    { name: "LinkedIn", icon: Linkedin, href: companyInfo.social.linkedin },
+    { name: "Instagram", icon: Instagram, href: companyInfo.social.instagram },
 ]
 
 type SubmitStatus = "idle" | "loading" | "success" | "error"

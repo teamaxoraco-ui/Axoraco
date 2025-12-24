@@ -2,11 +2,12 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Mail, MapPin, Phone, Send, Clock, Shield, Zap, CheckCircle2, AlertCircle } from "lucide-react"
+import { Mail, MapPin, Phone, Send, Clock, Shield, Zap, CheckCircle2, AlertCircle, ExternalLink } from "lucide-react"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
 import { LoadingSpinner } from "@/components/ui/button"
+import { companyInfo } from "@/lib/json-ld"
 
 interface FormState {
     firstName: string
@@ -96,28 +97,67 @@ export default function ContactPageClient() {
                             </p>
 
                             <div className="space-y-3 sm:space-y-4">
-                                {[
-                                    { icon: Mail, title: "Email Us", value: "hello@axoraco.com" },
-                                    { icon: Phone, title: "Call Us", value: "+1 (555) 123-4567" },
-                                    { icon: MapPin, title: "Visit Us", value: "123 Innovation Dr, Suite 400\nTech City, TC 90210" },
-                                ].map((item, i) => (
-                                    <SpotlightCard key={i} className="rounded-xl sm:rounded-2xl">
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ delay: 0.3 + i * 0.1 }}
-                                            className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-colors"
-                                        >
-                                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 flex-shrink-0">
-                                                <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
-                                            </div>
-                                            <div>
-                                                <h4 className="text-base sm:text-lg font-semibold mb-0.5 sm:mb-1">{item.title}</h4>
-                                                <p className="text-sm sm:text-base text-slate-400 whitespace-pre-line">{item.value}</p>
-                                            </div>
-                                        </motion.div>
-                                    </SpotlightCard>
-                                ))}
+                                {/* Email */}
+                                <SpotlightCard className="rounded-xl sm:rounded-2xl">
+                                    <a
+                                        href={companyInfo.emailLink}
+                                        className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-colors group"
+                                        aria-label="Send us an email"
+                                    >
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 flex-shrink-0 group-hover:bg-indigo-500/20 transition-colors">
+                                            <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-base sm:text-lg font-semibold mb-0.5 sm:mb-1 flex items-center gap-2">
+                                                Email Us
+                                                <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+                                            </h4>
+                                            <p className="text-sm sm:text-base text-slate-400 group-hover:text-slate-300 transition-colors">{companyInfo.email}</p>
+                                        </div>
+                                    </a>
+                                </SpotlightCard>
+
+                                {/* Phone */}
+                                <SpotlightCard className="rounded-xl sm:rounded-2xl">
+                                    <a
+                                        href={companyInfo.phoneLink}
+                                        className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-colors group"
+                                        aria-label="Call us"
+                                    >
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 flex-shrink-0 group-hover:bg-indigo-500/20 transition-colors">
+                                            <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-base sm:text-lg font-semibold mb-0.5 sm:mb-1 flex items-center gap-2">
+                                                Call Us
+                                                <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+                                            </h4>
+                                            <p className="text-sm sm:text-base text-slate-400 group-hover:text-slate-300 transition-colors">{companyInfo.phoneFormatted}</p>
+                                        </div>
+                                    </a>
+                                </SpotlightCard>
+
+                                {/* Address */}
+                                <SpotlightCard className="rounded-xl sm:rounded-2xl">
+                                    <a
+                                        href={companyInfo.address.mapsLink}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-colors group"
+                                        aria-label="View location on Google Maps"
+                                    >
+                                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-indigo-500/10 flex items-center justify-center border border-indigo-500/20 flex-shrink-0 group-hover:bg-indigo-500/20 transition-colors">
+                                            <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
+                                        </div>
+                                        <div>
+                                            <h4 className="text-base sm:text-lg font-semibold mb-0.5 sm:mb-1 flex items-center gap-2">
+                                                Our Location
+                                                <ExternalLink className="w-3 h-3 text-slate-500 group-hover:text-indigo-400 transition-colors" />
+                                            </h4>
+                                            <p className="text-sm sm:text-base text-slate-400 group-hover:text-slate-300 transition-colors">{companyInfo.address.full}</p>
+                                        </div>
+                                    </a>
+                                </SpotlightCard>
                             </div>
 
                             <div className="mt-6 sm:mt-10 flex flex-wrap gap-4 sm:gap-6">

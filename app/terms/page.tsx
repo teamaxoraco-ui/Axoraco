@@ -61,8 +61,8 @@ export default function TermsPage() {
                             <h2 className="text-2xl font-bold text-white mb-4">6. Contact</h2>
                             <p className="text-slate-400 leading-relaxed">
                                 For questions about these Terms, contact us at{" "}
-                                <a href="mailto:hello@axoraco.com" className="text-indigo-400 hover:text-indigo-300 transition-colors">
-                                    hello@axoraco.com
+                                <a href="mailto:team.axoraco@gmail.com" className="text-indigo-400 hover:text-indigo-300 transition-colors">
+                                    team.axoraco@gmail.com
                                 </a>
                             </p>
                         </section>

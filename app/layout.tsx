@@ -8,6 +8,7 @@ import { BackToTop } from "@/components/ui/back-to-top";
 import { SkipToContent } from "@/components/ui/skip-to-content";
 import { NavigationProgress } from "@/components/ui/navigation-progress";
 import { CookieConsent } from "@/components/ui/cookie-consent";
+import { companyInfo } from "@/lib/json-ld";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -128,9 +129,10 @@ export default function RootLayout({
               "logo": `${siteUrl}/og-image.png`,
               "description": "Axoraco merges intelligent AI Voice Bots with bespoke Web Architecture to scale your operations beyond human limits.",
               "sameAs": [
-                "https://twitter.com/axoraco",
-                "https://linkedin.com/company/axoraco",
-                "https://github.com/axoraco"
+                companyInfo.social.twitter,
+                companyInfo.social.linkedin,
+                companyInfo.social.github,
+                companyInfo.social.instagram
               ],
               "contactPoint": {
                 "@type": "ContactPoint",
