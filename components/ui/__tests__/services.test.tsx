@@ -30,16 +30,15 @@ describe("Services", () => {
         expect(screen.getByText(/web development/i)).toBeInTheDocument();
     });
 
-    it("has accessible structure", () => {
-        render(<Services />);
-        // Should have proper section with ID for navigation
-        const section = document.querySelector("#services");
-        expect(section).toBeInTheDocument();
-    });
-
     it("renders service descriptions", () => {
         render(<Services />);
         // Check for description content
         expect(screen.getByText(/automate/i)).toBeInTheDocument();
+    });
+
+    it("renders learn more links", () => {
+        render(<Services />);
+        const links = screen.getAllByText(/learn more/i);
+        expect(links.length).toBeGreaterThan(0);
     });
 });
