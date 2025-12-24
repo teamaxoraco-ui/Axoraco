@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { validateContactForm } from "@/lib/validations";
+import { getClientIP, rateLimiters } from "@/lib/rate-limit";
 
 // Discord webhook URL from environment
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_CONTACT_WEBHOOK_URL;
@@ -71,26 +73,47 @@ async function sendToDiscord(data: ContactFormData) {
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limiting
+        const clientIP = getClientIP(request);
+        const { isLimited, remaining, resetIn } = rateLimiters.strict(clientIP);
+
+        if (isLimited) {
+            return NextResponse.json(
+                {
+                    error: "Too many requests. Please try again later.",
+                    retryAfter: Math.ceil(resetIn / 1000),
+                },
+                {
+                    status: 429,
+                    headers: {
+                        "Retry-After": Math.ceil(resetIn / 1000).toString(),
+                        "X-RateLimit-Remaining": remaining.toString(),
+                    },
+                }
+            );
+        }
+
         const body = await request.json();
 
-        // Validate required fields
-        const { name, email, company, message } = body;
+        // Validate with Zod
+        const validation = validateContactForm(body);
 
-        if (!name || !email || !message) {
+        if (!validation.success) {
+            const errors = validation.error.errors.map(e => ({
+                field: e.path.join("."),
+                message: e.message,
+            }));
+
             return NextResponse.json(
-                { error: "Name, email, and message are required" },
+                {
+                    error: "Validation failed",
+                    details: errors,
+                },
                 { status: 400 }
             );
         }
 
-        // Basic email validation
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return NextResponse.json(
-                { error: "Invalid email format" },
-                { status: 400 }
-            );
-        }
+        const { name, email, company, message } = validation.data;
 
         // Send to Discord
         const sent = await sendToDiscord({ name, email, company, message });
@@ -99,13 +122,18 @@ export async function POST(request: NextRequest) {
             console.warn("Discord notification not sent (webhook may not be configured)");
         }
 
-        // Return success
+        // Return success with rate limit info
         return NextResponse.json(
             {
                 success: true,
                 message: "Thank you for your message! We'll get back to you soon.",
             },
-            { status: 200 }
+            {
+                status: 200,
+                headers: {
+                    "X-RateLimit-Remaining": remaining.toString(),
+                },
+            }
         );
     } catch (error) {
         console.error("Contact form error:", error);
