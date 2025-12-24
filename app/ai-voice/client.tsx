@@ -7,7 +7,6 @@ import { Footer } from "@/components/ui/footer"
 import { CTASection } from "@/components/ui/cta-section"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
 import Link from "next/link"
-import { smoothSpring } from "@/lib/animations"
 
 const features = [
     {

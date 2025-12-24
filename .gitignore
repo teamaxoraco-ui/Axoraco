@@ -8,6 +8,7 @@ node_modules/
 out/
 build/
 dist/
+.swc/
 
 # Environment files
 .env
@@ -41,6 +42,12 @@ next-env.d.ts
 # Testing
 coverage/
 .nyc_output/
+playwright-report/
+test-results/
+
+# Lighthouse
+lighthouse-report.json
+lighthouse-report.html
 
 # Misc
 *.log
@@ -54,3 +61,4 @@ coverage/
 # PWA
 sw.js
 workbox-*.js
+

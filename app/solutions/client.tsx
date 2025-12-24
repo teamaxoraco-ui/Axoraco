@@ -7,7 +7,6 @@ import { CTASection } from "@/components/ui/cta-section"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
 import { Layers, ArrowRight, CheckCircle2, Sparkles } from "lucide-react"
 import Link from "next/link"
-import { smoothSpring } from "@/lib/animations"
 
 const steps = [
     { title: "Strategy", desc: "We analyze your workflows to identify high-impact automation opportunities." },
