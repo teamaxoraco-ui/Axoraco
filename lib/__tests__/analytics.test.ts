@@ -24,7 +24,7 @@ describe("Analytics", () => {
     describe("trackEvent", () => {
         it("calls gtag with event parameters", () => {
             trackEvent({
-                category: "test",
+                category: "engagement",
                 action: "click",
                 label: "button",
             });
@@ -33,7 +33,7 @@ describe("Analytics", () => {
                 "event",
                 "click",
                 expect.objectContaining({
-                    event_category: "test",
+                    event_category: "engagement",
                     event_label: "button",
                 })
             );
@@ -65,7 +65,7 @@ describe("Analytics", () => {
             // Should not throw
             expect(() => {
                 trackEvent({
-                    category: "test",
+                    category: "engagement",
                     action: "test",
                 });
             }).not.toThrow();
@@ -89,8 +89,8 @@ describe("Analytics", () => {
             expect(analytics.pageView).toBeDefined();
         });
 
-        it("has socialClick helper", () => {
-            expect(analytics.socialClick).toBeDefined();
+        it("has externalLink helper", () => {
+            expect(analytics.externalLink).toBeDefined();
         });
     });
 });
