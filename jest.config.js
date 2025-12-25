@@ -35,7 +35,7 @@ const customJestConfig = {
     ],
 
     // Ignore patterns
-    testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
+    testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/", "<rootDir>/e2e/"],
 
     // Transform ignore patterns for Next.js
     transformIgnorePatterns: [
