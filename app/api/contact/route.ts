@@ -60,7 +60,7 @@ async function sendEmailNotification(data: ContactFormData): Promise<boolean> {
                 <p>Thanks for reaching out. We've received your message and will get back to you within 24 hours.</p>
                 <p>In the meantime, feel free to:</p>
                 <ul>
-                    <li><a href="https://axoraco.vercel.app/ai-voice">Check out our AI Voice Bot solutions</a></li>
+                    <li><a href="https://axoraco.vercel.app/ai-voice" target="_blank">Check out our AI Voice Bot solutions</a></li>
                     <li><a href="https://calendly.com/team-axoraco/30min" target="_blank">Book a free strategy session</a></li>
                 </ul>
                 <p>Best,<br>The Axoraco Team</p>
