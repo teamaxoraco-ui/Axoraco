@@ -4,21 +4,18 @@ import { trackEvent, analytics } from "../analytics";
 const mockGtag = jest.fn();
 
 describe("Analytics", () => {
+    const originalGtag = window.gtag;
+
     beforeEach(() => {
         // Reset mocks
         mockGtag.mockClear();
-
         // Mock window.gtag
-        Object.defineProperty(global, "window", {
-            value: {
-                gtag: mockGtag,
-            },
-            writable: true,
-        });
+        window.gtag = mockGtag;
     });
 
     afterEach(() => {
-        jest.restoreAllMocks();
+        // Restore original
+        window.gtag = originalGtag;
     });
 
     describe("trackEvent", () => {

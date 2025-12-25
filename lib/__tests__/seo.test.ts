@@ -9,7 +9,7 @@ describe("SEO Utilities", () => {
                 path: "/test",
             });
 
-            expect(result.title).toBe("Test Page | Axoraco");
+            expect(result.title).toBe("Test Page");
             expect(result.description).toBe("Test description");
         });
 

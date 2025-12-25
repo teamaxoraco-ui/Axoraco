@@ -1,3 +1,14 @@
+// Mock upstash modules to avoid import issues in test environment
+jest.mock("@upstash/ratelimit", () => ({
+    Ratelimit: jest.fn(() => ({
+        limit: jest.fn(),
+    })),
+}));
+
+jest.mock("@upstash/redis", () => ({
+    Redis: jest.fn(() => null),
+}));
+
 import { redis, rateLimiters, checkRateLimit, isRedisAvailable, createRateLimiter } from "../redis";
 
 describe("Redis Rate Limiting", () => {
