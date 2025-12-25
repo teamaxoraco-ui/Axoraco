@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateContactForm } from "@/lib/validations";
-import { getClientIP, rateLimiters } from "@/lib/rate-limit";
+import { getClientIP } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { sanitizeInput, containsSuspiciousPatterns, isHoneypotTriggered, HONEYPOT_FIELD } from "@/lib/security";
+import { rateLimiters, checkRateLimit, isRedisAvailable } from "@/lib/redis";
+import { Resend } from "resend";
 
-// Discord webhook URL from environment
+// Initialize Resend client
+const resend = process.env.RESEND_API_KEY
+    ? new Resend(process.env.RESEND_API_KEY)
+    : null;
+
+// Discord webhook URL (fallback if no email)
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_CONTACT_WEBHOOK_URL;
+
+// Email configuration
+const EMAIL_FROM = process.env.EMAIL_FROM || "Axoraco <onboarding@resend.dev>";
+const EMAIL_TO = process.env.EMAIL_TO || "team.axoraco@gmail.com";
 
 interface ContactFormData {
     name: string;
@@ -14,66 +25,81 @@ interface ContactFormData {
     message: string;
 }
 
-async function sendToDiscord(data: ContactFormData, clientIP: string) {
-    if (!DISCORD_WEBHOOK_URL) {
-        logger.warn("Discord webhook URL not configured");
+/**
+ * Send contact notification via Resend email
+ */
+async function sendEmailNotification(data: ContactFormData): Promise<boolean> {
+    if (!resend) return false;
+
+    try {
+        await resend.emails.send({
+            from: EMAIL_FROM,
+            to: EMAIL_TO,
+            subject: `New Contact: ${data.name}`,
+            html: `
+                <h2>📬 New Contact Form Submission</h2>
+                <p><strong>Name:</strong> ${data.name}</p>
+                <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+                ${data.company ? `<p><strong>Company:</strong> ${data.company}</p>` : ""}
+                <p><strong>Message:</strong></p>
+                <blockquote style="border-left: 3px solid #6366f1; padding-left: 16px; margin: 16px 0;">
+                    ${data.message.replace(/\n/g, "<br>")}
+                </blockquote>
+            `,
+            replyTo: data.email,
+        });
+
+        // Send auto-reply to user
+        await resend.emails.send({
+            from: EMAIL_FROM,
+            to: data.email,
+            subject: "Thanks for contacting Axoraco! 🚀",
+            html: `
+                <h2>Hi ${data.name.split(" ")[0]}! 👋</h2>
+                <p>Thanks for reaching out. We've received your message and will get back to you within 24 hours.</p>
+                <p>In the meantime, feel free to:</p>
+                <ul>
+                    <li><a href="https://axoraco.vercel.app/ai-voice">Check out our AI Voice Bot solutions</a></li>
+                    <li><a href="https://calendly.com/team-axoraco/30min">Book a free strategy session</a></li>
+                </ul>
+                <p>Best,<br>The Axoraco Team</p>
+            `,
+        });
+
+        return true;
+    } catch (error) {
+        logger.error("Failed to send email", { email: data.email }, error as Error);
         return false;
     }
+}
 
-    const embed = {
-        title: "📬 New Contact Form Submission",
-        color: 0x6366f1, // Indigo color
-        fields: [
-            {
-                name: "👤 Name",
-                value: data.name,
-                inline: true,
-            },
-            {
-                name: "📧 Email",
-                value: data.email,
-                inline: true,
-            },
-            ...(data.company
-                ? [
-                    {
-                        name: "🏢 Company",
-                        value: data.company,
-                        inline: true,
-                    },
-                ]
-                : []),
-            {
-                name: "💬 Message",
-                value: data.message.substring(0, 1024), // Discord limit
-                inline: false,
-            },
-            {
-                name: "🌐 IP Address",
-                value: clientIP,
-                inline: true,
-            },
-        ],
-        timestamp: new Date().toISOString(),
-        footer: {
-            text: "Axoraco Contact Form",
-        },
-    };
+/**
+ * Send to Discord as fallback
+ */
+async function sendToDiscord(data: ContactFormData, clientIP: string): Promise<boolean> {
+    if (!DISCORD_WEBHOOK_URL) return false;
 
     try {
         const response = await fetch(DISCORD_WEBHOOK_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                embeds: [embed],
+                embeds: [{
+                    title: "📬 New Contact Form Submission",
+                    color: 0x6366f1,
+                    fields: [
+                        { name: "👤 Name", value: data.name, inline: true },
+                        { name: "📧 Email", value: data.email, inline: true },
+                        ...(data.company ? [{ name: "🏢 Company", value: data.company, inline: true }] : []),
+                        { name: "💬 Message", value: data.message.substring(0, 1024), inline: false },
+                        { name: "🌐 IP", value: clientIP, inline: true },
+                    ],
+                    timestamp: new Date().toISOString(),
+                }],
             }),
         });
-
         return response.ok;
-    } catch (error) {
-        logger.error("Failed to send to Discord", { email: data.email }, error as Error);
+    } catch {
         return false;
     }
 }
@@ -83,21 +109,25 @@ export async function POST(request: NextRequest) {
     const clientIP = getClientIP(request);
 
     try {
-        // Rate limiting
-        const { isLimited, remaining, resetIn } = rateLimiters.strict(clientIP);
+        // Rate limiting with Redis (or fallback)
+        const rateLimit = await checkRateLimit(rateLimiters.contact, clientIP);
 
-        if (isLimited) {
-            logger.warn("Rate limit exceeded", { clientIP, resetIn });
+        if (!rateLimit.success) {
+            const resetIn = Math.ceil((rateLimit.reset - Date.now()) / 1000);
+            logger.warn("Rate limit exceeded", { clientIP, remaining: rateLimit.remaining });
+
             return NextResponse.json(
                 {
                     error: "Too many requests. Please try again later.",
-                    retryAfter: Math.ceil(resetIn / 1000),
+                    retryAfter: resetIn,
                 },
                 {
                     status: 429,
                     headers: {
-                        "Retry-After": Math.ceil(resetIn / 1000).toString(),
-                        "X-RateLimit-Remaining": remaining.toString(),
+                        "Retry-After": resetIn.toString(),
+                        "X-RateLimit-Limit": rateLimit.limit.toString(),
+                        "X-RateLimit-Remaining": rateLimit.remaining.toString(),
+                        "X-RateLimit-Reset": rateLimit.reset.toString(),
                     },
                 }
             );
@@ -105,92 +135,81 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        // Honeypot check (bot detection)
+        // Honeypot check
         if (isHoneypotTriggered(body)) {
-            logger.warn("Honeypot triggered - likely bot", { clientIP });
-            // Return fake success to confuse bots
-            return NextResponse.json(
-                { success: true, message: "Thank you for your message!" },
-                { status: 200 }
-            );
+            logger.warn("Honeypot triggered", { clientIP });
+            return NextResponse.json({ success: true, message: "Thank you!" }, { status: 200 });
         }
 
-        // Validate with Zod
+        // Validate
         const validation = validateContactForm(body);
-
         if (!validation.success) {
-            const errors = validation.error.errors.map((e) => ({
-                field: e.path.join("."),
-                message: e.message,
-            }));
-
-            logger.info("Validation failed", { clientIP, errors });
             return NextResponse.json(
                 {
                     error: "Validation failed",
-                    details: errors,
+                    details: validation.error.errors.map(e => ({
+                        field: e.path.join("."),
+                        message: e.message,
+                    })),
                 },
                 { status: 400 }
             );
         }
 
-        // Sanitize inputs
-        const sanitizedData: ContactFormData = {
+        // Sanitize
+        const data: ContactFormData = {
             name: sanitizeInput(validation.data.name, 100),
             email: sanitizeInput(validation.data.email, 254),
             company: validation.data.company ? sanitizeInput(validation.data.company, 100) : undefined,
             message: sanitizeInput(validation.data.message, 5000),
         };
 
-        // Check for suspicious patterns (XSS attempts)
-        const allInputs = `${sanitizedData.name} ${sanitizedData.message} ${sanitizedData.company || ""}`;
-        if (containsSuspiciousPatterns(allInputs)) {
-            logger.warn("Suspicious patterns detected", { clientIP, name: sanitizedData.name });
+        // XSS check
+        if (containsSuspiciousPatterns(`${data.name} ${data.message} ${data.company || ""}`)) {
+            logger.warn("Suspicious patterns", { clientIP });
             return NextResponse.json(
-                { error: "Invalid input detected. Please remove any special characters." },
+                { error: "Invalid input detected." },
                 { status: 400 }
             );
         }
 
-        // Send to Discord
-        const sent = await sendToDiscord(sanitizedData, clientIP);
+        // Send notification (email first, Discord fallback)
+        let sent = false;
+        if (resend) {
+            sent = await sendEmailNotification(data);
+        }
+        if (!sent) {
+            sent = await sendToDiscord(data, clientIP);
+        }
 
         const duration = Date.now() - startTime;
         logger.apiRequest("POST", "/api/contact", 200, duration, {
             clientIP,
-            email: sanitizedData.email,
-            discordSent: sent,
+            emailSent: Boolean(resend),
+            redisEnabled: isRedisAvailable(),
         });
 
-        // Return success with rate limit info
         return NextResponse.json(
-            {
-                success: true,
-                message: "Thank you for your message! We'll get back to you soon.",
-            },
+            { success: true, message: "Thank you for your message! We'll get back to you soon." },
             {
                 status: 200,
                 headers: {
-                    "X-RateLimit-Remaining": remaining.toString(),
+                    "X-RateLimit-Remaining": rateLimit.remaining.toString(),
                 },
             }
         );
     } catch (error) {
-        const duration = Date.now() - startTime;
-        logger.error("Contact form error", { clientIP, duration }, error as Error);
-
+        logger.error("Contact form error", { clientIP }, error as Error);
         return NextResponse.json(
-            { error: "Failed to process your request. Please try again." },
+            { error: "Failed to process request." },
             { status: 500 }
         );
     }
 }
 
-/**
- * Return honeypot field name for client-side forms
- */
 export async function GET() {
     return NextResponse.json({
         honeypotField: HONEYPOT_FIELD,
+        redisEnabled: isRedisAvailable(),
     });
 }
