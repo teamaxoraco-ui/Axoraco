@@ -3,6 +3,9 @@ node_modules/
 .pnp/
 .pnp.js
 
+# Credentials (NEVER COMMIT)
+CREDENTIALS.txt
+
 # Build output
 .next/
 out/
