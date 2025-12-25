@@ -41,9 +41,10 @@ describe("SEO Utilities", () => {
                 path: "/og-test",
             });
 
-            expect(result.openGraph?.title).toBe("OG Test | Axoraco");
-            expect(result.openGraph?.description).toBe("OG description");
-            expect(result.openGraph?.type).toBe("website");
+            const og = result.openGraph as { title?: string; description?: string; type?: string };
+            expect(og?.title).toBe("OG Test | Axoraco");
+            expect(og?.description).toBe("OG description");
+            expect(og?.type).toBe("website");
         });
 
         it("includes Twitter card metadata", () => {
@@ -53,8 +54,9 @@ describe("SEO Utilities", () => {
                 path: "/twitter",
             });
 
-            expect(result.twitter?.card).toBe("summary_large_image");
-            expect(result.twitter?.title).toBe("Twitter Test | Axoraco");
+            const twitter = result.twitter as { card?: string; title?: string };
+            expect(twitter?.card).toBe("summary_large_image");
+            expect(twitter?.title).toBe("Twitter Test | Axoraco");
         });
     });
 

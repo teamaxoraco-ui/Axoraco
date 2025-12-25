@@ -36,22 +36,28 @@ describe("JSON-LD Schemas", () => {
     });
 
     describe("jsonLd schemas", () => {
+        type JsonLdSchema = Record<string, unknown>;
+
         it("has organization schema", () => {
-            expect(jsonLd.organization["@type"]).toBe("Organization");
-            expect(jsonLd.organization["@context"]).toBe("https://schema.org");
+            const org = jsonLd.organization as JsonLdSchema;
+            expect(org["@type"]).toBe("Organization");
+            expect(org["@context"]).toBe("https://schema.org");
         });
 
         it("has website schema", () => {
-            expect(jsonLd.website["@type"]).toBe("WebSite");
+            const website = jsonLd.website as JsonLdSchema;
+            expect(website["@type"]).toBe("WebSite");
         });
 
         it("has localBusiness schema", () => {
-            expect(jsonLd.localBusiness["@type"]).toBe("LocalBusiness");
+            const business = jsonLd.localBusiness as JsonLdSchema;
+            expect(business["@type"]).toBe("LocalBusiness");
         });
 
         it("organization has required fields", () => {
-            expect(jsonLd.organization.name).toBeDefined();
-            expect(jsonLd.organization.url).toBeDefined();
+            const org = jsonLd.organization as JsonLdSchema;
+            expect(org.name).toBeDefined();
+            expect(org.url).toBeDefined();
         });
     });
 });
