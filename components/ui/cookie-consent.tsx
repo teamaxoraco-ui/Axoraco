@@ -14,15 +14,16 @@ export function CookieConsent() {
     const [isVisible, setIsVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    // Check consent status after component mounts (client-side localStorage access)
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
-        // Check if user has already given consent
         const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
         if (!consent) {
-            // Small delay for better UX
             setTimeout(() => setIsVisible(true), 1500);
         }
         setIsLoading(false);
     }, []);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleAccept = () => {
         localStorage.setItem(COOKIE_CONSENT_KEY, "accepted");

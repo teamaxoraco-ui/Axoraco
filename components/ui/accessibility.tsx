@@ -70,13 +70,15 @@ export function FocusTrap({ children, active, onEscape }: FocusTrapProps) {
 export function LiveRegion({ message, priority = "polite" }: { message: string; priority?: "polite" | "assertive" }) {
     const [announcement, setAnnouncement] = useState("");
 
+    // Re-announce message for screen readers by clearing and resetting
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         if (message) {
-            // Clear and re-announce to trigger screen reader
             setAnnouncement("");
             setTimeout(() => setAnnouncement(message), 100);
         }
     }, [message]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     return (
         <div

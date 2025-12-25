@@ -9,13 +9,12 @@ describe("Error Tracking", () => {
     let consoleErrorSpy: jest.SpyInstance;
     let consoleWarnSpy: jest.SpyInstance;
     let consoleInfoSpy: jest.SpyInstance;
-    let consoleLogSpy: jest.SpyInstance;
 
     beforeEach(() => {
         consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
         consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation();
         consoleInfoSpy = jest.spyOn(console, "info").mockImplementation();
-        consoleLogSpy = jest.spyOn(console, "log").mockImplementation();
+        jest.spyOn(console, "log").mockImplementation();
     });
 
     afterEach(() => {

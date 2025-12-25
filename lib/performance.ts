@@ -1,3 +1,5 @@
+import React from "react";
+
 /**
  * @fileoverview Performance utilities for optimizing Core Web Vitals.
  */
@@ -11,8 +13,7 @@
 export function lazyLoad<T extends React.ComponentType<unknown>>(
     importFn: () => Promise<{ default: T }>
 ) {
-    const { lazy } = require("react");
-    return lazy(importFn);
+    return React.lazy(importFn);
 }
 
 /**

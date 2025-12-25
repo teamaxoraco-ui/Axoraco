@@ -6,8 +6,6 @@ import { Footer } from "@/components/ui/footer"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
 import { Flag, Globe, Zap, Shield, Heart, ArrowRight, Target, Award, TrendingUp } from "lucide-react"
 import Link from "next/link"
-import { smoothSpring } from "@/lib/animations"
-import { AnimatedCounter } from "@/components/ui/animated-counter"
 
 const stats = [
     { label: "Countries Served", value: "12+", icon: Globe },

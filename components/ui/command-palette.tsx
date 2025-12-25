@@ -63,7 +63,8 @@ export function CommandPalette() {
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, []);
 
-    // Focus input when opened
+    // Focus input when opened, reset state when closed
+    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         if (isOpen) {
             setTimeout(() => inputRef.current?.focus(), 100);
@@ -72,6 +73,7 @@ export function CommandPalette() {
             setSelectedIndex(0);
         }
     }, [isOpen]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     // Navigate results with keyboard
     const handleKeyDown = useCallback(

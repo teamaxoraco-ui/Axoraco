@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { Skeleton, SkeletonText, SkeletonCard, SkeletonButton } from "../skeleton";
 
 describe("Skeleton Components", () => {

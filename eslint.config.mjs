@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Custom ignores:
+    "scripts/**",  // Node.js scripts use CommonJS
+    "coverage/**", // Jest coverage reports
   ]),
 ]);
 

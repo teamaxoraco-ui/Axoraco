@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { usePathname } from "next/navigation";
 
 /**
@@ -12,9 +12,9 @@ export function NavigationProgress() {
     const [isLoading, setIsLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const pathname = usePathname();
+    const timersRef = useRef<NodeJS.Timeout[]>([]);
 
-    useEffect(() => {
-        // Track route changes for loading state
+    const startLoading = useCallback(() => {
         setIsLoading(true);
         setProgress(0);
 
@@ -26,13 +26,20 @@ export function NavigationProgress() {
             setTimeout(() => setIsLoading(false), 200);
         }, 600);
 
+        timersRef.current = [timer1, timer2, timer3, timer4];
+    }, []);
+
+    // This effect intentionally updates state on route change - it's the correct pattern
+    // for tracking navigation state in a route-change listener
+    /* eslint-disable react-hooks/set-state-in-effect */
+    useEffect(() => {
+        startLoading();
+
         return () => {
-            clearTimeout(timer1);
-            clearTimeout(timer2);
-            clearTimeout(timer3);
-            clearTimeout(timer4);
+            timersRef.current.forEach(clearTimeout);
         };
-    }, [pathname]);
+    }, [pathname, startLoading]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     return (
         <AnimatePresence>
