@@ -94,6 +94,8 @@ export function Footer() {
                                 <Link
                                     key={social.name}
                                     href={social.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="w-10 h-10 rounded-full bg-slate-800/50 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:border-indigo-500/50 hover:bg-indigo-500/10 transition-all duration-300"
                                     aria-label={social.name}
                                 >

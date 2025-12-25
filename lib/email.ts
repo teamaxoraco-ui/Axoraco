@@ -187,10 +187,10 @@ export async function sendContactAutoReply(data: {
             <p>We've received your message and will get back to you within 24 hours.</p>
             <p>In the meantime, feel free to:</p>
             <ul>
-                <li>Check out our <a href="https://axoraco.vercel.app/ai-voice">AI Voice Bot solutions</a></li>
-                <li>Book a <a href="https://calendly.com/team-axoraco/30min">free strategy session</a></li>
+                <li>Check out our <a href="https://axoraco.vercel.app/ai-voice" target="_blank">AI Voice Bot solutions</a></li>
+                <li>Book a <a href="https://calendly.com/team-axoraco/30min" target="_blank">free strategy session</a></li>
             </ul>
-            <a href="https://axoraco.vercel.app" class="cta">Visit Our Website</a>
+            <a href="https://axoraco.vercel.app" target="_blank" class="cta">Visit Our Website</a>
         </div>
         <p style="color: #64748b; font-size: 12px; margin-top: 24px; text-align: center;">
             © ${new Date().getFullYear()} Axoraco. Vadodara, Gujarat, India.
