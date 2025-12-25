@@ -4,6 +4,7 @@ import { getClientIP } from "@/lib/rate-limit";
 import { logger } from "@/lib/logger";
 import { sanitizeInput, containsSuspiciousPatterns, isHoneypotTriggered, HONEYPOT_FIELD } from "@/lib/security";
 import { rateLimiters, checkRateLimit, isRedisAvailable } from "@/lib/redis";
+import { saveContact, isSupabaseAvailable } from "@/lib/supabase";
 import { Resend } from "resend";
 
 // Initialize Resend client
@@ -173,6 +174,18 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Save to database
+        const userAgent = request.headers.get("user-agent") || "unknown";
+        const dbResult = await saveContact({
+            ...data,
+            ip_address: clientIP,
+            user_agent: userAgent,
+        });
+
+        if (dbResult.success) {
+            logger.info("Contact saved to database", { id: dbResult.id, clientIP });
+        }
+
         // Send notification (email first, Discord fallback)
         let sent = false;
         if (resend) {
@@ -211,5 +224,6 @@ export async function GET() {
     return NextResponse.json({
         honeypotField: HONEYPOT_FIELD,
         redisEnabled: isRedisAvailable(),
+        databaseEnabled: isSupabaseAvailable(),
     });
 }
