@@ -2,23 +2,27 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { GoogleTagManager, GoogleTagManagerNoScript } from "@/components/analytics/google-tag-manager";
-import { CustomCursor } from "@/components/ui/custom-cursor";
-import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { BackToTop } from "@/components/ui/back-to-top";
 import { SkipToContent } from "@/components/ui/skip-to-content";
-import { NavigationProgress } from "@/components/ui/navigation-progress";
-import { CookieConsent } from "@/components/ui/cookie-consent";
+import {
+  LazyCustomCursor,
+  LazyScrollProgress,
+  LazyBackToTop,
+  LazyNavigationProgress,
+  LazyCookieConsent,
+} from "@/components/ui/lazy-components";
 import { companyInfo } from "@/lib/json-ld";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap", // Prevent FOIT for better performance
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap", // Prevent FOIT for better performance
 });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://axoraco.com";
@@ -172,12 +176,12 @@ export default function RootLayout({
       >
         {/* Accessibility: Skip to main content link */}
         <SkipToContent />
-        {/* Navigation Progress Indicator */}
-        <NavigationProgress />
-        {/* Global Premium Components - Available on ALL pages */}
-        <ScrollProgress />
-        <CustomCursor />
-        <BackToTop />
+        {/* Navigation Progress Indicator - Lazy loaded */}
+        <LazyNavigationProgress />
+        {/* Global Premium Components - Lazy loaded for performance */}
+        <LazyScrollProgress />
+        <LazyCustomCursor />
+        <LazyBackToTop />
         {/* GTM NoScript Fallback */}
         <GoogleTagManagerNoScript containerId={GTM_CONTAINER_ID} />
         {/* Google Analytics */}
@@ -185,8 +189,8 @@ export default function RootLayout({
         <div id="main-content">
           {children}
         </div>
-        {/* Cookie Consent Banner */}
-        <CookieConsent />
+        {/* Cookie Consent Banner - Lazy loaded */}
+        <LazyCookieConsent />
       </body>
     </html>
   );
