@@ -48,47 +48,30 @@ export function Hero() {
             {/* === AURORA BACKGROUND SYSTEM === */}
             <div className="absolute inset-0 bg-slate-950" />
 
-            {/* Primary Aurora Blob */}
-            <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 2, ease: "easeOut" }}
-                className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full"
+            {/* Primary Aurora Blob - Static on mobile for performance */}
+            <div
+                className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] md:w-[1200px] h-[400px] md:h-[600px] rounded-full"
                 style={{
-                    willChange: "transform",
                     background: "radial-gradient(ellipse at center, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 70%)",
+                    filter: "blur(60px)",
+                }}
+            />
+
+            {/* Secondary Aurora - Hidden on mobile for performance */}
+            <div
+                className="hidden md:block absolute top-[10%] right-[10%] w-[600px] h-[400px] rounded-full"
+                style={{
+                    background: "radial-gradient(ellipse at center, rgba(168, 85, 247, 0.25) 0%, transparent 60%)",
                     filter: "blur(80px)",
                 }}
             />
 
-            {/* Secondary Aurora (Animated) */}
-            <motion.div
-                animate={{
-                    x: [0, 100, 0],
-                    y: [0, -50, 0],
-                    scale: [1, 1.1, 1],
-                }}
-                transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[10%] right-[10%] w-[600px] h-[400px] rounded-full"
+            {/* Tertiary Accent Glow - Hidden on mobile for performance */}
+            <div
+                className="hidden md:block absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full"
                 style={{
-                    willChange: "transform",
-                    background: "radial-gradient(ellipse at center, rgba(168, 85, 247, 0.25) 0%, transparent 60%)",
-                    filter: "blur(100px)",
-                }}
-            />
-
-            {/* Tertiary Accent Glow */}
-            <motion.div
-                animate={{
-                    x: [0, -80, 0],
-                    y: [0, 80, 0],
-                }}
-                transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full"
-                style={{
-                    willChange: "transform",
                     background: "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2) 0%, transparent 60%)",
-                    filter: "blur(120px)",
+                    filter: "blur(100px)",
                 }}
             />
 
