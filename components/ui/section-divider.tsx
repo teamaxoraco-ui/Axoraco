@@ -13,7 +13,7 @@ export function SectionDivider({
 }) {
     // Hide entirely on mobile to improve LCP/performance
     return (
-        <div className={`hidden md:block absolute left-0 w-full overflow-hidden leading-none z-10 ${position === "top" ? "top-0 rotate-180" : "bottom-0"} ${height} ${className}`}>
+        <div className={`absolute left-0 w-full overflow-hidden leading-none z-10 ${position === "top" ? "top-0 rotate-180" : "bottom-0"} ${height} ${className}`}>
             <svg
                 className="relative block w-full h-full"
                 data-name="Layer 1"

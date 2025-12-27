@@ -1,30 +1,11 @@
 "use client"
 
-import dynamic from "next/dynamic"
-import { HeroLite } from "./hero-lite"
+import { Hero } from "@/components/ui/hero"
 
-// Lazy load full Hero only on desktop
-const HeroFull = dynamic(() => import("./hero").then(mod => ({ default: mod.Hero })), {
-    ssr: false,
-    loading: () => <HeroLite />,
-})
+// Now that Hero is optimized with pure CSS animations and conditionally rendered particles,
+// we can use the same rich visual component on both mobile and desktop.
+// This solves the "dull" mobile experience while maintaining high performance.
 
-/**
- * ResponsiveHero - Shows lightweight CSS-only hero on mobile for performance,
- * and full animated hero on desktop for the premium experience.
- */
 export function ResponsiveHero() {
-    return (
-        <>
-            {/* Mobile: Lightweight CSS-only hero */}
-            <div className="md:hidden">
-                <HeroLite />
-            </div>
-
-            {/* Desktop: Full animated hero with framer-motion */}
-            <div className="hidden md:block">
-                <HeroFull />
-            </div>
-        </>
-    )
+    return <Hero />
 }
