@@ -17,16 +17,17 @@ const containerVariants = {
     },
 }
 
-// Removed blur filter animation for mobile performance
+// Enhanced spring animation for premium feel
 const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 },
     visible: {
         opacity: 1,
         y: 0,
         transition: {
-            duration: 0.5,
-            ease: "easeOut" as const,
-        },
+            type: "spring",
+            stiffness: 100,
+            damping: 20,
+        } as const,
     },
 }
 
@@ -47,9 +48,9 @@ export function Hero() {
             {/* === AURORA BACKGROUND SYSTEM === */}
             <div className="absolute inset-0 bg-slate-950" />
 
-            {/* Primary Aurora Blob - Static on mobile for performance */}
+            {/* Primary Aurora Blob - Animated */}
             <div
-                className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] md:w-[1200px] h-[400px] md:h-[600px] rounded-full"
+                className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] md:w-[1200px] h-[400px] md:h-[600px] rounded-full animate-aurora"
                 style={{
                     background: "radial-gradient(ellipse at center, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 70%)",
                     filter: "blur(60px)",
@@ -65,12 +66,13 @@ export function Hero() {
                 }}
             />
 
-            {/* Tertiary Accent Glow - Hidden on mobile for performance */}
+            {/* Tertiary Accent Glow - Animated with delay */}
             <div
-                className="hidden md:block absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full"
+                className="hidden md:block absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full animate-aurora"
                 style={{
                     background: "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2) 0%, transparent 60%)",
                     filter: "blur(100px)",
+                    animationDelay: "-5s",
                 }}
             />
 
@@ -110,7 +112,7 @@ export function Hero() {
                         Automating Reality.
                         <br />
                         <span className="relative inline-block">
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 animate-text-shimmer bg-[length:200%_auto]">
                                 Elevating Business.
                             </span>
                             {/* Underline glow effect */}

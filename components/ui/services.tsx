@@ -77,6 +77,13 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
         service.className
       )}
     >
+      {/* Premium Animated Border for Featured Card */}
+      {service.featured && (
+        <div className="absolute inset-0 z-0 overflow-hidden rounded-[inherit]">
+          <div className="absolute inset-[-200%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_140deg,rgba(99,102,241,0.6)_160deg,transparent_180deg)]" />
+        </div>
+      )}
+
       {/* Spotlight Effect */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"

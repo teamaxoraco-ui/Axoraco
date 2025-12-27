@@ -1,7 +1,7 @@
 "use client"
 
 import { Search, Code2, Rocket, CheckCircle2 } from "lucide-react"
-import { cn } from "@/lib/utils"
+
 
 const steps = [
     {
