@@ -458,3 +458,41 @@ html {
   animation-delay: 0.4s;
   opacity: 0;
 }
+
+/* Respect user's motion preference and improve mobile performance */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .animate-float,
+  .animate-pulse,
+  .animate-pulse-slow,
+  .animate-pulse-glow,
+  .animate-gradient-shift {
+    animation: none !important;
+  }
+}
+
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+
+  /* Reduce animation complexity on mobile */
+  .animate-float {
+    animation-duration: 10s !important;
+  }
+
+  .animate-pulse-slow {
+    animation-duration: 6s !important;
+  }
+
+  /* Disable expensive blur effects on mobile */
+  .blur-3xl {
+    filter: blur(30px) !important;
+  }
+}
