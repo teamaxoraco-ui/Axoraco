@@ -73,17 +73,10 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
         "group relative overflow-hidden rounded-3xl transition-all duration-500",
         service.featured
           ? "border-2 border-indigo-500/30 bg-gradient-to-br from-indigo-950/60 to-slate-900/60 p-10"
-          : "border border-slate-800 bg-slate-900/50 p-8",
+          : "border border-slate-700/50 bg-slate-800/40 p-8",
         service.className
       )}
     >
-      {/* Premium Animated Border for Featured Card */}
-      {service.featured && (
-        <div className="absolute inset-0 z-0 overflow-hidden rounded-[inherit]">
-          <div className="absolute inset-[-200%] animate-[spin_8s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_140deg,rgba(99,102,241,0.6)_160deg,transparent_180deg)]" />
-        </div>
-      )}
-
       {/* Spotlight Effect */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"

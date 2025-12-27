@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/responsive-sections"
 import { Footer } from "@/components/ui/footer"
 import { Skeleton } from "@/components/ui/skeleton"
+import { SectionDivider } from "@/components/ui/section-divider"
 
 // Skeleton for below-fold content
 function SectionSkeleton() {
@@ -34,22 +35,45 @@ export default function Home() {
       <ResponsiveNavbar />
       <ResponsiveHero />
 
-      {/* Below-fold content - Hybrid mobile/desktop */}
-      <Suspense fallback={<SectionSkeleton />}>
-        <ResponsiveServices />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <ResponsiveTrust />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <ResponsiveProcess />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <ResponsiveTestimonials />
-      </Suspense>
-      <Suspense fallback={<SectionSkeleton />}>
-        <ResponsiveCTA />
-      </Suspense>
+      {/* Services - Slate 900 */}
+      <section className="relative bg-slate-900">
+        <SectionDivider position="top" className="text-slate-950" />
+        <Suspense fallback={<SectionSkeleton />}>
+          <ResponsiveServices />
+        </Suspense>
+      </section>
+
+      {/* Trust - Slate 950 */}
+      <section className="relative bg-slate-950">
+        <SectionDivider position="top" className="text-slate-900" />
+        <Suspense fallback={<SectionSkeleton />}>
+          <ResponsiveTrust />
+        </Suspense>
+      </section>
+
+      {/* Process - Slate 900 */}
+      <section className="relative bg-slate-900">
+        <SectionDivider position="top" className="text-slate-950" />
+        <Suspense fallback={<SectionSkeleton />}>
+          <ResponsiveProcess />
+        </Suspense>
+      </section>
+
+      {/* Testimonials - Slate 950 */}
+      <section className="relative bg-slate-950">
+        <SectionDivider position="top" className="text-slate-900" />
+        <Suspense fallback={<SectionSkeleton />}>
+          <ResponsiveTestimonials />
+        </Suspense>
+      </section>
+
+      {/* CTA - Slate 900 */}
+      <section className="relative bg-slate-900 pb-20">
+        <SectionDivider position="top" className="text-slate-950" />
+        <Suspense fallback={<SectionSkeleton />}>
+          <ResponsiveCTA />
+        </Suspense>
+      </section>
       <Footer />
     </main>
   )

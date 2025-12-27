@@ -26,19 +26,14 @@ export function OptimizedImage({
 }: OptimizedImageProps) {
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-    // If Cloudinary is not configured, fallback to Next.js Image
+    // If Cloudinary is not configured, use a placeholder or fallback
     if (!cloudName) {
         return (
-            <div className={className} style={{ position: 'relative', width, height }}>
-                <img
-                    src={src}
-                    alt={alt}
-                    width={width}
-                    height={height}
-                    className="w-full h-full object-cover"
-                    loading={priority ? "eager" : "lazy"}
-                />
-            </div>
+            <div
+                className={`bg-gradient-to-br from-slate-800 to-slate-900 ${className}`}
+                style={{ width, height }}
+                aria-label={alt}
+            />
         );
     }
 

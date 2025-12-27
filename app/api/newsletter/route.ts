@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getClientIP } from "@/lib/rate-limit";
-import { logger } from "@/lib/logger";
 import { rateLimiters, checkRateLimit, isRedisAvailable } from "@/lib/redis";
 import { sanitizeInput } from "@/lib/security";
 import { sendToGoogleSheets, isGoogleSheetsAvailable } from "@/lib/google-sheets";
@@ -44,7 +43,7 @@ async function sendWelcomeEmail(email: string): Promise<boolean> {
         });
         return true;
     } catch (error) {
-        logger.error("Failed to send welcome email", { email }, error as Error);
+        console.error("Failed to send welcome email:", error);
         return false;
     }
 }
@@ -68,7 +67,7 @@ async function sendOwnerNotification(email: string): Promise<boolean> {
         });
         return true;
     } catch (error) {
-        logger.error("Failed to send owner notification", { email }, error as Error);
+        console.error("Failed to send owner notification:", error);
         return false;
     }
 }
@@ -95,7 +94,7 @@ async function sendToDiscord(email: string): Promise<boolean> {
         });
         return response.ok;
     } catch (error) {
-        logger.error("Failed to send to Discord", { email }, error as Error);
+        console.error("Failed to send to Discord:", error);
         return false;
     }
 }
@@ -136,14 +135,14 @@ export async function POST(request: NextRequest) {
             sendToGoogleSheets({ type: 'newsletter', email, ip: clientIP }),
         ]);
 
-        logger.info("Newsletter notifications sent", { welcomeSent, ownerSent, discordSent, sheetsSent });
+        console.log("Newsletter notifications:", { welcomeSent, ownerSent, discordSent, sheetsSent });
 
         return NextResponse.json(
             { success: true, message: "Thanks for subscribing! Check your email for a welcome message." },
             { status: 200 }
         );
     } catch (error) {
-        logger.error("Newsletter signup error", {}, error as Error);
+        console.error("Newsletter signup error:", error);
         return NextResponse.json(
             { error: "Failed to subscribe. Please try again." },
             { status: 500 }

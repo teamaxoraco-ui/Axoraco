@@ -1,57 +1,58 @@
 "use client"
 
-import { useRef } from "react"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
+import { cn } from "@/lib/utils"
 
 interface RevealOnScrollProps {
     children: React.ReactNode
     className?: string
-    direction?: "up" | "down" | "left" | "right"
     delay?: number
 }
 
+/**
+ * Lightweight scroll reveal using IntersectionObserver and CSS animations.
+ * Replaces heavy framer-motion scroll listeners.
+ */
 export function RevealOnScroll({
     children,
     className = "",
-    direction = "up",
+    delay = 0
 }: RevealOnScrollProps) {
     const ref = useRef<HTMLDivElement>(null)
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["0 1", "1.2 1"]
-    })
+    const [isVisible, setIsVisible] = useState(false)
 
-    const opacity = useTransform(scrollYProgress, [0, 1], [0, 1])
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                    observer.disconnect() // Only trigger once
+                }
+            },
+            {
+                threshold: 0.1,
+                rootMargin: "50px"
+            }
+        )
 
-    // Pre-compute all possible transforms at the top level (hooks must be called unconditionally)
-    const transformUp = useTransform(scrollYProgress, [0, 1], [60, 0])
-    const transformDown = useTransform(scrollYProgress, [0, 1], [-60, 0])
-    const transformLeft = useTransform(scrollYProgress, [0, 1], [60, 0])
-    const transformRight = useTransform(scrollYProgress, [0, 1], [-60, 0])
-
-    // Select the appropriate transform based on direction
-    const getTransformForDirection = () => {
-        switch (direction) {
-            case "up": return transformUp
-            case "down": return transformDown
-            case "left": return transformLeft
-            case "right": return transformRight
+        if (ref.current) {
+            observer.observe(ref.current)
         }
-    }
 
-    const transform = getTransformForDirection()
-    const isHorizontal = direction === "left" || direction === "right"
+        return () => observer.disconnect()
+    }, [])
 
     return (
-        <motion.div
+        <div
             ref={ref}
-            style={{
-                opacity,
-                [isHorizontal ? "x" : "y"]: transform,
-            }}
-            className={className}
+            className={cn(
+                "transition-all duration-1000 ease-out transform",
+                isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12",
+                className
+            )}
+            style={{ transitionDelay: `${delay}s` }}
         >
             {children}
-        </motion.div>
+        </div>
     )
 }

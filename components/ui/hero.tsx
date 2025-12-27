@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { ArrowRight, Sparkles, Zap, Shield, Clock } from "lucide-react"
 import Link from "next/link"
 import { SpotlightContainer } from "@/components/ui/spotlight"
+import { FloatingParticles } from "@/components/ui/floating-particles"
 
 // Simplified animation variants for better mobile performance
 const containerVariants = {
@@ -17,17 +18,16 @@ const containerVariants = {
     },
 }
 
-// Enhanced spring animation for premium feel
+// Removed blur filter animation for mobile performance
 const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
         opacity: 1,
         y: 0,
         transition: {
-            type: "spring",
-            stiffness: 100,
-            damping: 20,
-        } as const,
+            duration: 0.5,
+            ease: "easeOut" as const,
+        },
     },
 }
 
@@ -48,9 +48,14 @@ export function Hero() {
             {/* === AURORA BACKGROUND SYSTEM === */}
             <div className="absolute inset-0 bg-slate-950" />
 
-            {/* Primary Aurora Blob - Animated */}
+            {/* Desktop Particles - Absolute positioned within hero */}
+            <div className="hidden lg:block absolute inset-0 z-0">
+                <FloatingParticles />
+            </div>
+
+            {/* Primary Aurora Blob - Static on mobile for performance */}
             <div
-                className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] md:w-[1200px] h-[400px] md:h-[600px] rounded-full animate-aurora"
+                className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] md:w-[1200px] h-[400px] md:h-[600px] rounded-full"
                 style={{
                     background: "radial-gradient(ellipse at center, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 70%)",
                     filter: "blur(60px)",
@@ -66,13 +71,12 @@ export function Hero() {
                 }}
             />
 
-            {/* Tertiary Accent Glow - Animated with delay */}
+            {/* Tertiary Accent Glow - Hidden on mobile for performance */}
             <div
-                className="hidden md:block absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full animate-aurora"
+                className="hidden md:block absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full"
                 style={{
                     background: "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2) 0%, transparent 60%)",
                     filter: "blur(100px)",
-                    animationDelay: "-5s",
                 }}
             />
 

@@ -74,7 +74,7 @@ function ProcessCard({ step, index }: { step: Step; index: number }) {
             )}>
                 <div
                     onMouseMove={handleMouseMove}
-                    className="group relative p-8 rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-all duration-300 overflow-hidden"
+                    className="group relative p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:border-indigo-500/30 transition-all duration-300 overflow-hidden"
                 >
                     {/* Spotlight Effect */}
                     <motion.div
