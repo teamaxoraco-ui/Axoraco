@@ -267,8 +267,8 @@ export function Hero() {
                 </motion.div>
             </div>
 
-            {/* === LIVE TICKER === */}
-            <div className="absolute bottom-0 left-0 right-0 bg-slate-950/90 backdrop-blur-md border-t border-white/5 py-3 overflow-hidden z-20">
+            {/* === LIVE TICKER - Hidden on mobile for performance === */}
+            <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-slate-950/90 backdrop-blur-md border-t border-white/5 py-3 overflow-hidden z-20">
                 <motion.div
                     animate={{ x: ["0%", "-33.33%"] }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
