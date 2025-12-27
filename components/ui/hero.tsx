@@ -3,30 +3,29 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Sparkles, Zap, Shield, Clock } from "lucide-react"
 import Link from "next/link"
-import { smoothSpring } from "@/lib/animations"
 import { SpotlightContainer } from "@/components/ui/spotlight"
 
-// Animation variants for staggered entry with smooth springs
+// Simplified animation variants for better mobile performance
 const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
         opacity: 1,
         transition: {
-            staggerChildren: 0.12,
-            delayChildren: 0.15,
+            staggerChildren: 0.1,
+            delayChildren: 0.1,
         },
     },
 }
 
+// Removed blur filter animation for mobile performance
 const itemVariants = {
-    hidden: { opacity: 0, y: 30, filter: "blur(8px)" },
+    hidden: { opacity: 0, y: 20 },
     visible: {
         opacity: 1,
         y: 0,
-        filter: "blur(0px)",
         transition: {
-            ...smoothSpring,
-            duration: 0.7,
+            duration: 0.5,
+            ease: "easeOut" as const,
         },
     },
 }
