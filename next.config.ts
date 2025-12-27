@@ -28,6 +28,10 @@ const nextConfig: NextConfig = {
       "@supabase/supabase-js",
       "@upstash/redis",
       "@upstash/ratelimit",
+      "zod",
+      "resend",
+      "clsx",
+      "tailwind-merge",
     ],
   },
 
