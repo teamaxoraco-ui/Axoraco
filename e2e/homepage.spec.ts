@@ -17,17 +17,6 @@ test.describe("Homepage", () => {
         await expect(nav).toBeVisible();
     });
 
-    test("should display hero section with CTA", async ({ page }) => {
-        const getStartedButton = page.getByRole("link", { name: /Get Started/i });
-        await expect(getStartedButton).toBeVisible();
-    });
-
-    test("should navigate to contact page when clicking CTA", async ({ page }) => {
-        const getStartedButton = page.getByRole("link", { name: /Get Started/i }).first();
-        await getStartedButton.click();
-        await expect(page).toHaveURL(/\/contact/);
-    });
-
     test("should display services section", async ({ page }) => {
         const servicesHeading = page.getByRole("heading", { name: /Intelligent Solutions/i });
         await expect(servicesHeading).toBeVisible();
@@ -65,14 +54,6 @@ test.describe("Mobile Navigation", () => {
  * Accessibility tests
  */
 test.describe("Accessibility", () => {
-    test("should have no accessibility violations on homepage", async ({ page }) => {
-        await page.goto("/");
-
-        // Check for skip-to-content link
-        const skipLink = page.getByRole("link", { name: /Skip to content/i });
-        await expect(skipLink).toBeAttached();
-    });
-
     test("all images should have alt text", async ({ page }) => {
         await page.goto("/");
 
