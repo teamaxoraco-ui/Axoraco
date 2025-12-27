@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 
 interface Particle {
     x: number
@@ -13,22 +13,8 @@ interface Particle {
 
 export function FloatingParticles() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
-    const [shouldRender, setShouldRender] = useState(false)
-
-    // Only enable on desktop to save battery/performance on mobile
-    useEffect(() => {
-        const checkMobile = () => {
-            setShouldRender(window.innerWidth >= 1024) // lg breakpoint
-        }
-
-        checkMobile()
-        window.addEventListener("resize", checkMobile)
-        return () => window.removeEventListener("resize", checkMobile)
-    }, [])
 
     useEffect(() => {
-        if (!shouldRender) return
-
         const canvas = canvasRef.current
         if (!canvas) return
 
@@ -56,8 +42,6 @@ export function FloatingParticles() {
         }
 
         const animate = () => {
-            if (!shouldRender) return
-
             ctx.clearRect(0, 0, canvas.width, canvas.height)
 
             particles.forEach((p) => {
@@ -110,14 +94,12 @@ export function FloatingParticles() {
             cancelAnimationFrame(animationId)
             window.removeEventListener("resize", resize)
         }
-    }, [shouldRender])
-
-    if (!shouldRender) return null
+    }, [])
 
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 pointer-events-none z-0 opacity-60"
+            className="fixed inset-0 pointer-events-none z-0 opacity-60"
             aria-hidden="true"
         />
     )

@@ -1,11 +1,20 @@
 "use client"
 
-import { Hero } from "@/components/ui/hero"
+import dynamic from "next/dynamic"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { HeroLite } from "./hero-lite"
 
-// Now that Hero is optimized with pure CSS animations and conditionally rendered particles,
-// we can use the same rich visual component on both mobile and desktop.
-// This solves the "dull" mobile experience while maintaining high performance.
+const Hero = dynamic(() => import("./hero").then((mod) => mod.Hero), {
+    ssr: false,
+    loading: () => <HeroLite />
+})
 
 export function ResponsiveHero() {
+    const isMobile = useMediaQuery("(max-width: 768px)")
+
+    if (isMobile) {
+        return <HeroLite />
+    }
+
     return <Hero />
 }

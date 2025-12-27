@@ -73,7 +73,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
         "group relative overflow-hidden rounded-3xl transition-all duration-500",
         service.featured
           ? "border-2 border-indigo-500/30 bg-gradient-to-br from-indigo-950/60 to-slate-900/60 p-10"
-          : "border border-slate-700/50 bg-slate-800/40 p-8",
+          : "border border-slate-800 bg-slate-900/50 p-8",
         service.className
       )}
     >
