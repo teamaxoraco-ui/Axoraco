@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { Navbar } from "@/components/ui/navbar"
+import { ResponsiveNavbar } from "@/components/ui/responsive-navbar"
 import { ResponsiveHero } from "@/components/ui/responsive-hero"
 import { ResponsiveServices } from "@/components/ui/responsive-services"
 import {
@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500/30">
       {/* Critical above-fold content */}
-      <Navbar />
+      <ResponsiveNavbar />
       <ResponsiveHero />
 
       {/* Below-fold content - Hybrid mobile/desktop */}
