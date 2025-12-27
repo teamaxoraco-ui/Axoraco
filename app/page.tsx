@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { Navbar } from "@/components/ui/navbar"
-import { Hero } from "@/components/ui/hero"
+import { ResponsiveHero } from "@/components/ui/responsive-hero"
 import { Services } from "@/components/ui/services"
 import { Trust } from "@/components/ui/trust"
 import { Process } from "@/components/ui/process"
@@ -30,7 +30,7 @@ export default function Home() {
     <main className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500/30">
       {/* Critical above-fold content */}
       <Navbar />
-      <Hero />
+      <ResponsiveHero />
 
       {/* Below-fold content with Suspense for better LCP */}
       <Suspense fallback={<SectionSkeleton />}>
