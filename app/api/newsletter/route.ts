@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getClientIP } from "@/lib/rate-limit";
+import { rateLimiters, checkRateLimit, isRedisAvailable } from "@/lib/redis";
+import { sanitizeInput } from "@/lib/security";
 
 // Discord webhook URL from environment
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_NEWSLETTER_WEBHOOK_URL;
@@ -45,8 +48,31 @@ async function sendToDiscord(email: string) {
 
 export async function POST(request: NextRequest) {
     try {
+        // Rate limiting
+        const clientIP = getClientIP(request);
+
+        if (isRedisAvailable() && rateLimiters.newsletter) {
+            const rateLimitResult = await checkRateLimit(rateLimiters.newsletter, clientIP);
+            if (!rateLimitResult.success) {
+                return NextResponse.json(
+                    {
+                        error: "Too many requests. Please try again later.",
+                        retryAfter: Math.ceil((rateLimitResult.reset - Date.now()) / 1000)
+                    },
+                    {
+                        status: 429,
+                        headers: {
+                            "Retry-After": String(Math.ceil((rateLimitResult.reset - Date.now()) / 1000)),
+                            "X-RateLimit-Limit": String(rateLimitResult.limit),
+                            "X-RateLimit-Remaining": String(rateLimitResult.remaining),
+                        }
+                    }
+                );
+            }
+        }
+
         const body = await request.json();
-        const { email } = body;
+        const email = sanitizeInput(body.email || "");
 
         if (!email) {
             return NextResponse.json(
@@ -55,7 +81,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Basic email validation
+        // Strict email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return NextResponse.json(
