@@ -1,23 +1,37 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { motion, useMotionValue } from "framer-motion"
+import { useState, useEffect, useRef } from "react"
 
+/**
+ * Lightweight custom cursor using CSS transforms and RAF
+ * No framer-motion for maximum performance
+ */
 export function CustomCursor() {
     const [isVisible, setIsVisible] = useState(false)
     const [isHovering, setIsHovering] = useState(false)
-
-    const cursorX = useMotionValue(-100)
-    const cursorY = useMotionValue(-100)
+    const cursorRef = useRef<HTMLDivElement>(null)
+    const rafRef = useRef<number | null>(null)
+    const posRef = useRef({ x: -100, y: -100 })
 
     useEffect(() => {
-        const isTouchDevice = 'ontouchstart' in window
-        if (isTouchDevice) return
+        // Skip on touch devices
+        if ('ontouchstart' in window) return
 
         const moveCursor = (e: MouseEvent) => {
-            cursorX.set(e.clientX)
-            cursorY.set(e.clientY)
-            setIsVisible(true)
+            posRef.current = { x: e.clientX, y: e.clientY }
+
+            if (!isVisible) setIsVisible(true)
+
+            // Use RAF for smooth updates
+            if (rafRef.current === null) {
+                rafRef.current = requestAnimationFrame(() => {
+                    if (cursorRef.current) {
+                        cursorRef.current.style.transform =
+                            `translate(${posRef.current.x}px, ${posRef.current.y}px) translate(-50%, -50%)`
+                    }
+                    rafRef.current = null
+                })
+            }
         }
 
         const handleMouseOver = (e: MouseEvent) => {
@@ -32,32 +46,29 @@ export function CustomCursor() {
             setIsHovering(isInteractive)
         }
 
-        window.addEventListener('mousemove', moveCursor)
-        window.addEventListener('mouseover', handleMouseOver)
+        window.addEventListener('mousemove', moveCursor, { passive: true })
+        window.addEventListener('mouseover', handleMouseOver, { passive: true })
 
         return () => {
             window.removeEventListener('mousemove', moveCursor)
             window.removeEventListener('mouseover', handleMouseOver)
+            if (rafRef.current !== null) {
+                cancelAnimationFrame(rafRef.current)
+            }
         }
-    }, [cursorX, cursorY])
+    }, [isVisible])
 
     if (!isVisible) return null
 
     return (
-        <>
-            {/* Simple dot cursor */}
-            <motion.div
-                className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-white mix-blend-difference"
-                style={{
-                    x: cursorX,
-                    y: cursorY,
-                    translateX: "-50%",
-                    translateY: "-50%",
-                    width: isHovering ? 48 : 8,
-                    height: isHovering ? 48 : 8,
-                    transition: "width 0.15s ease-out, height 0.15s ease-out",
-                }}
-            />
-        </>
+        <div
+            ref={cursorRef}
+            className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full bg-white mix-blend-difference will-change-transform"
+            style={{
+                width: isHovering ? 48 : 8,
+                height: isHovering ? 48 : 8,
+                transition: "width 0.15s ease-out, height 0.15s ease-out",
+            }}
+        />
     )
 }
