@@ -17,17 +17,38 @@ const nextConfig: NextConfig = {
 
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ["lucide-react", "framer-motion"],
+    optimizePackageImports: [
+      "lucide-react",
+      "framer-motion",
+      "@supabase/supabase-js",
+      "@upstash/redis",
+      "@upstash/ratelimit",
+    ],
   },
 
   // Compression
   compress: true,
 
-  // Headers for caching
+  // Power Pack optimizations
+  poweredByHeader: false,
+
+  // React strict mode for better dev experience
+  reactStrictMode: true,
+
+  // Headers for caching and security
   async headers() {
     return [
       {
         source: "/:all*(svg|jpg|jpeg|png|webp|avif|ico|woff|woff2)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/:path*",
         headers: [
           {
             key: "Cache-Control",
@@ -50,6 +71,14 @@ const nextConfig: NextConfig = {
             key: "X-XSS-Protection",
             value: "1; mode=block",
           },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
         ],
       },
     ];
@@ -57,3 +86,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
