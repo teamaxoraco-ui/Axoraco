@@ -5,6 +5,7 @@ import { logger } from "@/lib/logger";
 import { sanitizeInput, containsSuspiciousPatterns, isHoneypotTriggered, HONEYPOT_FIELD } from "@/lib/security";
 import { rateLimiters, checkRateLimit, isRedisAvailable } from "@/lib/redis";
 import { saveContact, isSupabaseAvailable } from "@/lib/supabase";
+import { sendToGoogleSheets, isGoogleSheetsAvailable } from "@/lib/google-sheets";
 import { Resend } from "resend";
 
 // Initialize Resend client
@@ -186,14 +187,14 @@ export async function POST(request: NextRequest) {
             logger.info("Contact saved to database", { id: dbResult.id, clientIP });
         }
 
-        // Send notification (email first, Discord fallback)
-        let sent = false;
-        if (resend) {
-            sent = await sendEmailNotification(data);
-        }
-        if (!sent) {
-            sent = await sendToDiscord(data, clientIP);
-        }
+        // Send to all channels in parallel for reliability
+        const [emailSent, discordSent, sheetsSent] = await Promise.all([
+            resend ? sendEmailNotification(data) : Promise.resolve(false),
+            sendToDiscord(data, clientIP),
+            sendToGoogleSheets({ type: 'contact', ...data, ip: clientIP }),
+        ]);
+
+        logger.info("Notifications sent", { emailSent, discordSent, sheetsSent, clientIP });
 
         const duration = Date.now() - startTime;
         logger.apiRequest("POST", "/api/contact", 200, duration, {
@@ -225,5 +226,6 @@ export async function GET() {
         honeypotField: HONEYPOT_FIELD,
         redisEnabled: isRedisAvailable(),
         databaseEnabled: isSupabaseAvailable(),
+        googleSheetsEnabled: isGoogleSheetsAvailable(),
     });
 }

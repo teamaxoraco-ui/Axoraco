@@ -27,7 +27,7 @@ export const contactFormSchema = z.object({
 
     message: z
         .string()
-        .min(3, "Message must be at least 3 characters")
+        .min(1, "Message is required")
         .max(5000, "Message must be less than 5000 characters"),
 });
 
