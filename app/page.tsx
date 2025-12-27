@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { Navbar } from "@/components/ui/navbar"
 import { ResponsiveHero } from "@/components/ui/responsive-hero"
-import { Services } from "@/components/ui/services"
+import { ResponsiveServices } from "@/components/ui/responsive-services"
 import { Trust } from "@/components/ui/trust"
 import { Process } from "@/components/ui/process"
 import { Testimonials } from "@/components/ui/testimonials"
@@ -34,7 +34,7 @@ export default function Home() {
 
       {/* Below-fold content with Suspense for better LCP */}
       <Suspense fallback={<SectionSkeleton />}>
-        <Services />
+        <ResponsiveServices />
       </Suspense>
       <Suspense fallback={<SectionSkeleton />}>
         <Trust />
