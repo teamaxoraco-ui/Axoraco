@@ -2,10 +2,12 @@ import { Suspense } from "react"
 import { Navbar } from "@/components/ui/navbar"
 import { ResponsiveHero } from "@/components/ui/responsive-hero"
 import { ResponsiveServices } from "@/components/ui/responsive-services"
-import { Trust } from "@/components/ui/trust"
-import { Process } from "@/components/ui/process"
-import { Testimonials } from "@/components/ui/testimonials"
-import { CTASection } from "@/components/ui/cta-section"
+import {
+  ResponsiveTrust,
+  ResponsiveProcess,
+  ResponsiveTestimonials,
+  ResponsiveCTA
+} from "@/components/ui/responsive-sections"
 import { Footer } from "@/components/ui/footer"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -32,21 +34,21 @@ export default function Home() {
       <Navbar />
       <ResponsiveHero />
 
-      {/* Below-fold content with Suspense for better LCP */}
+      {/* Below-fold content - Hybrid mobile/desktop */}
       <Suspense fallback={<SectionSkeleton />}>
         <ResponsiveServices />
       </Suspense>
       <Suspense fallback={<SectionSkeleton />}>
-        <Trust />
+        <ResponsiveTrust />
       </Suspense>
       <Suspense fallback={<SectionSkeleton />}>
-        <Process />
+        <ResponsiveProcess />
       </Suspense>
       <Suspense fallback={<SectionSkeleton />}>
-        <Testimonials />
+        <ResponsiveTestimonials />
       </Suspense>
       <Suspense fallback={<SectionSkeleton />}>
-        <CTASection />
+        <ResponsiveCTA />
       </Suspense>
       <Footer />
     </main>
