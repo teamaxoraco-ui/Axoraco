@@ -190,23 +190,17 @@ export function GradientText({
     return (
         <motion.span
             className={`text-transparent bg-clip-text bg-gradient-to-r ${gradient} ${className}`}
-            animate={
-                animate
-                    ? {
-                        backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                    }
-                    : undefined
-            }
-            transition={
-                animate
-                    ? {
-                        duration: 5,
-                        repeat: Infinity,
-                        ease: "linear",
-                    }
-                    : undefined
-            }
-            style={animate ? { backgroundSize: "200% 200%" } : undefined}
+            {...(animate ? {
+                animate: {
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                },
+                transition: {
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "linear",
+                },
+                style: { backgroundSize: "200% 200%" }
+            } : {})}
         >
             {children}
         </motion.span>

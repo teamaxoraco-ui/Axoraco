@@ -40,11 +40,11 @@ import { logger } from "@/lib/logger";
 
 interface SheetEntry {
     type: 'contact' | 'newsletter';
-    name?: string;
+    name?: string | undefined;
     email: string;
-    company?: string;
-    message?: string;
-    ip?: string;
+    company?: string | undefined;
+    message?: string | undefined;
+    ip?: string | undefined;
 }
 
 /**

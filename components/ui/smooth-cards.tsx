@@ -71,14 +71,12 @@ interface GlassCardProps {
 export function GlassCard({ children, className = "", hoverEffect = true }: GlassCardProps) {
     return (
         <motion.div
-            whileHover={
-                hoverEffect
-                    ? {
-                        y: -5,
-                        boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
-                    }
-                    : undefined
-            }
+            {...(hoverEffect ? {
+                whileHover: {
+                    y: -5,
+                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+                }
+            } : {})}
             transition={{
                 type: "spring",
                 stiffness: 200,

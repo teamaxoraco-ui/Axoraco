@@ -3,11 +3,11 @@
 import { cn } from "@/lib/utils";
 
 interface SkeletonProps {
-    className?: string;
-    variant?: "text" | "circular" | "rectangular";
-    width?: string | number;
-    height?: string | number;
-    animate?: boolean;
+    className?: string | undefined;
+    variant?: "text" | "circular" | "rectangular" | undefined;
+    width?: string | number | undefined;
+    height?: string | number | undefined;
+    animate?: boolean | undefined;
 }
 
 /**

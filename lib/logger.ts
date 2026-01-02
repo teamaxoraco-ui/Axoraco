@@ -17,7 +17,7 @@ interface LogEntry {
     error?: {
         name: string;
         message: string;
-        stack?: string;
+        stack?: string | undefined;
     };
 }
 

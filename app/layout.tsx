@@ -10,7 +10,6 @@ import {
   LazyNavigationProgress,
   LazyCookieConsent,
 } from "@/components/ui/lazy-components";
-import { companyInfo } from "@/lib/json-ld";
 import "./globals.css";
 import { JsonLd } from "@/components/seo/json-ld";
 
