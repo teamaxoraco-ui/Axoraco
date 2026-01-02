@@ -49,15 +49,15 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
 
 // Types
 export interface Contact {
-    id?: string;
+    id?: string | undefined;
     name: string;
     email: string;
-    company?: string;
+    company?: string | undefined;
     message: string;
-    ip_address?: string;
-    user_agent?: string;
-    created_at?: string;
-    status?: "new" | "read" | "replied" | "archived";
+    ip_address?: string | undefined;
+    user_agent?: string | undefined;
+    created_at?: string | undefined;
+    status?: "new" | "read" | "replied" | "archived" | undefined;
 }
 
 export interface ContactResult {
