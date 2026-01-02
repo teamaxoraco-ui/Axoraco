@@ -32,19 +32,19 @@
  */
 
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { logger } from "@/lib/logger";
 
 // Check if Supabase is configured
-const isSupabaseConfigured = Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
 
 // Create Supabase client (only if configured)
+// On server side, this will use the Service Role Key if provided (bypassing RLS)
+// On client side, this will use the Anon Key
 export const supabase: SupabaseClient | null = isSupabaseConfigured
-    ? createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    ? createClient(supabaseUrl!, supabaseKey!)
     : null;
 
 // Types
@@ -74,7 +74,7 @@ export interface ContactResult {
  */
 export async function saveContact(contact: Contact): Promise<ContactResult> {
     if (!supabase) {
-        console.warn("Supabase not configured - contact not saved to database");
+        logger.warn("Supabase not configured - contact not saved to database");
         return { success: false, error: "Database not configured" };
     }
 
@@ -86,13 +86,13 @@ export async function saveContact(contact: Contact): Promise<ContactResult> {
             .single();
 
         if (error) {
-            console.error("Failed to save contact:", error.message);
+            logger.error("Failed to save contact", { error: error.message });
             return { success: false, error: error.message };
         }
 
         return { success: true, id: data.id };
     } catch (error) {
-        console.error("Supabase error:", error);
+        logger.error("Supabase error", {}, error as Error);
         return { success: false, error: "Database error" };
     }
 }

@@ -36,6 +36,7 @@
  */
 
 const GOOGLE_SHEETS_WEBHOOK_URL = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+import { logger } from "@/lib/logger";
 
 interface SheetEntry {
     type: 'contact' | 'newsletter';
@@ -52,7 +53,7 @@ interface SheetEntry {
  */
 export async function sendToGoogleSheets(data: SheetEntry): Promise<boolean> {
     if (!GOOGLE_SHEETS_WEBHOOK_URL) {
-        console.warn("Google Sheets webhook URL not configured");
+        logger.warn("Google Sheets webhook URL not configured");
         return false;
     }
 
@@ -64,13 +65,13 @@ export async function sendToGoogleSheets(data: SheetEntry): Promise<boolean> {
         });
 
         if (!response.ok) {
-            console.error("Google Sheets webhook failed:", response.status);
+            logger.error("Google Sheets webhook failed", { status: response.status });
             return false;
         }
 
         return true;
     } catch (error) {
-        console.error("Failed to send to Google Sheets:", error);
+        logger.error("Failed to send to Google Sheets", {}, error as Error);
         return false;
     }
 }

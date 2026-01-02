@@ -47,9 +47,13 @@ export function isEmailConfigured(): boolean {
  *   html: "<h1>Hello</h1>",
  * });
  */
+import { logger } from "@/lib/logger";
+
+// ... inside sendEmail ...
+
 export async function sendEmail(options: EmailOptions): Promise<SendResult> {
     if (!RESEND_API_KEY) {
-        console.warn("Resend API key not configured - email not sent");
+        logger.warn("Resend API key not configured - email not sent");
         return { success: false, error: "Email service not configured" };
     }
 
@@ -75,11 +79,11 @@ export async function sendEmail(options: EmailOptions): Promise<SendResult> {
         if (response.ok) {
             return { success: true, id: data.id };
         } else {
-            console.error("Resend API error:", data);
+            logger.error("Resend API error", { response: data });
             return { success: false, error: data.message || "Failed to send email" };
         }
     } catch (error) {
-        console.error("Email send error:", error);
+        logger.error("Email send error", {}, error as Error);
         return { success: false, error: "Network error sending email" };
     }
 }
@@ -183,7 +187,7 @@ export async function sendContactAutoReply(data: {
             <div class="logo">AXORACO</div>
         </div>
         <div class="content">
-            <h2>Thanks for reaching out, ${escapeHtml(data.name.split(" ")[0])}! 👋</h2>
+            <h2>Thanks for reaching out, ${escapeHtml(data.name.split(" ")[0] || data.name)}! 👋</h2>
             <p>We've received your message and will get back to you within 24 hours.</p>
             <p>In the meantime, feel free to:</p>
             <ul>

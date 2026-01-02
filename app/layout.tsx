@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/lazy-components";
 import { companyInfo } from "@/lib/json-ld";
 import "./globals.css";
+import { JsonLd } from "@/components/seo/json-ld";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -109,7 +110,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://images.unsplash.com" />
@@ -121,53 +122,9 @@ export default function RootLayout({
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.json" />
         {/* JSON-LD Structured Data for Organization */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Axoraco",
-              "url": siteUrl,
-              "logo": `${siteUrl}/og-image.png`,
-              "description": "Axoraco merges intelligent AI Voice Bots with bespoke Web Architecture to scale your operations beyond human limits.",
-              "sameAs": [
-                companyInfo.social.twitter,
-                companyInfo.social.linkedin,
-                companyInfo.social.github,
-                companyInfo.social.instagram
-              ],
-              "contactPoint": {
-                "@type": "ContactPoint",
-                "contactType": "sales",
-                "url": `${siteUrl}/contact`
-              },
-              "offers": {
-                "@type": "AggregateOffer",
-                "priceCurrency": "USD",
-                "offerCount": "3",
-                "offers": [
-                  {
-                    "@type": "Offer",
-                    "name": "AI Voice Bots",
-                    "description": "Human-like conversational agents for appointment setting, customer support, and sales"
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "Web Development",
-                    "description": "High-performance, SEO-optimized web solutions"
-                  },
-                  {
-                    "@type": "Offer",
-                    "name": "API Integration",
-                    "description": "Seamless integration with robust API solutions"
-                  }
-                ]
-              }
-            })
-          }}
-        />
+        <JsonLd />
         {/* Google Tag Manager */}
         <GoogleTagManager containerId={GTM_CONTAINER_ID} />
       </head>

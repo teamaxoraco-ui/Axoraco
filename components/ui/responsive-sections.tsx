@@ -5,6 +5,7 @@ import { TrustLite } from "./trust-lite"
 import { ProcessLite } from "./process-lite"
 import { TestimonialsLite } from "./testimonials-lite"
 import { CTALite } from "./cta-lite"
+import { useMediaQuery } from "@/hooks/use-media-query"
 
 // Lazy load full versions only on desktop
 const TrustFull = dynamic(() => import("./trust").then(mod => ({ default: mod.Trust })), {
@@ -28,37 +29,21 @@ const CTAFull = dynamic(() => import("./cta-section").then(mod => ({ default: mo
 })
 
 export function ResponsiveTrust() {
-    return (
-        <>
-            <div className="md:hidden"><TrustLite /></div>
-            <div className="hidden md:block"><TrustFull /></div>
-        </>
-    )
+    const isDesktop = useMediaQuery("(min-width: 768px)")
+    return isDesktop ? <TrustFull /> : <TrustLite />
 }
 
 export function ResponsiveProcess() {
-    return (
-        <>
-            <div className="md:hidden"><ProcessLite /></div>
-            <div className="hidden md:block"><ProcessFull /></div>
-        </>
-    )
+    const isDesktop = useMediaQuery("(min-width: 768px)")
+    return isDesktop ? <ProcessFull /> : <ProcessLite />
 }
 
 export function ResponsiveTestimonials() {
-    return (
-        <>
-            <div className="md:hidden"><TestimonialsLite /></div>
-            <div className="hidden md:block"><TestimonialsFull /></div>
-        </>
-    )
+    const isDesktop = useMediaQuery("(min-width: 768px)")
+    return isDesktop ? <TestimonialsFull /> : <TestimonialsLite />
 }
 
 export function ResponsiveCTA() {
-    return (
-        <>
-            <div className="md:hidden"><CTALite /></div>
-            <div className="hidden md:block"><CTAFull /></div>
-        </>
-    )
+    const isDesktop = useMediaQuery("(min-width: 768px)")
+    return isDesktop ? <CTAFull /> : <CTALite />
 }

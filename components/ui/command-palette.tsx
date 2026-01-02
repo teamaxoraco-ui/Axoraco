@@ -103,7 +103,7 @@ export function CommandPalette() {
         if (!acc[result.category]) {
             acc[result.category] = [];
         }
-        acc[result.category].push(result);
+        acc[result.category]!.push(result);
         return acc;
     }, {} as Record<string, SearchResult[]>);
 

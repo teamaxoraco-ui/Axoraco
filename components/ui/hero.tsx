@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { ArrowRight, Sparkles, Zap, Shield, Clock } from "lucide-react"
 import Link from "next/link"
 import { SpotlightContainer } from "@/components/ui/spotlight"
+import { DESIGN_SYSTEM } from "@/lib/design-system"
 
 // Simplified animation variants for better mobile performance
 const containerVariants = {
@@ -49,28 +50,34 @@ export function Hero() {
 
             {/* Primary Aurora Blob - Static on mobile for performance */}
             <div
-                className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[800px] md:w-[1200px] h-[400px] md:h-[600px] rounded-full"
+                className="absolute top-[-20%] left-1/2 -translate-x-1/2 rounded-full"
                 style={{
+                    width: DESIGN_SYSTEM.HERO.BLOB_1.WIDTH,
+                    height: DESIGN_SYSTEM.HERO.BLOB_1.HEIGHT,
                     background: "radial-gradient(ellipse at center, rgba(99, 102, 241, 0.3) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 70%)",
-                    filter: "blur(60px)",
+                    filter: `blur(${DESIGN_SYSTEM.HERO.BLOB_1.BLUR})`,
                 }}
             />
 
             {/* Secondary Aurora - Hidden on mobile for performance */}
             <div
-                className="hidden md:block absolute top-[10%] right-[10%] w-[600px] h-[400px] rounded-full"
+                className="hidden md:block absolute top-[10%] right-[10%] rounded-full"
                 style={{
+                    width: DESIGN_SYSTEM.HERO.BLOB_2.WIDTH,
+                    height: DESIGN_SYSTEM.HERO.BLOB_2.HEIGHT,
                     background: "radial-gradient(ellipse at center, rgba(168, 85, 247, 0.25) 0%, transparent 60%)",
-                    filter: "blur(80px)",
+                    filter: `blur(${DESIGN_SYSTEM.HERO.BLOB_2.BLUR})`,
                 }}
             />
 
             {/* Tertiary Accent Glow - Hidden on mobile for performance */}
             <div
-                className="hidden md:block absolute bottom-[20%] left-[5%] w-[500px] h-[500px] rounded-full"
+                className="hidden md:block absolute bottom-[20%] left-[5%] rounded-full"
                 style={{
+                    width: DESIGN_SYSTEM.HERO.BLOB_3.WIDTH,
+                    height: DESIGN_SYSTEM.HERO.BLOB_3.HEIGHT,
                     background: "radial-gradient(ellipse at center, rgba(59, 130, 246, 0.2) 0%, transparent 60%)",
-                    filter: "blur(100px)",
+                    filter: `blur(${DESIGN_SYSTEM.HERO.BLOB_3.BLUR})`,
                 }}
             />
 
@@ -79,7 +86,7 @@ export function Hero() {
                 className="absolute inset-0 opacity-[0.03]"
                 style={{
                     backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-                    backgroundSize: "60px 60px",
+                    backgroundSize: DESIGN_SYSTEM.HERO.GRID_SIZE,
                 }}
             />
 
@@ -138,6 +145,7 @@ export function Hero() {
                         <Link
                             href="/contact"
                             className="group relative inline-flex items-center justify-center"
+                            aria-label="Get Started with AI Automation"
                         >
                             {/* Glow Effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500" />
@@ -159,6 +167,7 @@ export function Hero() {
                         <Link
                             href="/solutions"
                             className="group px-8 py-4 bg-white/5 border border-white/10 text-white font-medium rounded-full hover:bg-white/10 hover:border-white/20 transition-all duration-300 backdrop-blur-sm flex items-center justify-center gap-2"
+                            aria-label="View our AI Solutions"
                         >
                             View Solutions
                             <Zap className="w-4 h-4 text-indigo-400 group-hover:text-white transition-colors" aria-hidden="true" />
@@ -209,7 +218,7 @@ export function Hero() {
                     animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                     transition={{ delay: 0.5, duration: 1.2, ease: [0.25, 0.4, 0.25, 1] }}
                     className="relative hidden lg:block"
-                    style={{ perspective: "1000px" }}
+                    style={{ perspective: DESIGN_SYSTEM.HERO.PERSPECTIVE }}
                 >
                     <motion.div
                         variants={floatVariants}

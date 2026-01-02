@@ -9,6 +9,7 @@
 
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { logger } from "@/lib/logger";
 
 // Check if Redis is configured
 const isRedisConfigured = Boolean(
@@ -37,7 +38,7 @@ export function createRateLimiter(
     prefix: string = "ratelimit"
 ) {
     if (!redis) {
-        console.warn("Redis not configured - rate limiting disabled");
+        logger.warn("Redis not configured - rate limiting disabled");
         return null;
     }
 
@@ -60,6 +61,7 @@ export const rateLimiters = {
             limiter: Ratelimit.slidingWindow(5, "1 m"),
             prefix: "ratelimit:contact",
             analytics: true,
+            timeout: 1000,
         })
         : null,
 
@@ -72,6 +74,7 @@ export const rateLimiters = {
             limiter: Ratelimit.slidingWindow(3, "1 h"),
             prefix: "ratelimit:newsletter",
             analytics: true,
+            timeout: 1000,
         })
         : null,
 
@@ -84,6 +87,7 @@ export const rateLimiters = {
             limiter: Ratelimit.slidingWindow(100, "1 m"),
             prefix: "ratelimit:api",
             analytics: true,
+            timeout: 1000,
         })
         : null,
 };

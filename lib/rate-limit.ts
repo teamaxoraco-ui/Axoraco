@@ -97,7 +97,7 @@ function cleanupOldEntries(): void {
 export function getClientIP(request: Request): string {
     const forwarded = request.headers.get("x-forwarded-for");
     if (forwarded) {
-        return forwarded.split(",")[0].trim();
+        return (forwarded.split(",")[0] || forwarded).trim();
     }
 
     const realIP = request.headers.get("x-real-ip");
@@ -106,7 +106,11 @@ export function getClientIP(request: Request): string {
     }
 
     // Fallback for local development
-    return "127.0.0.1";
+    if (process.env.NODE_ENV === "development") {
+        return "127.0.0.1";
+    }
+
+    return "0.0.0.0";
 }
 
 /**

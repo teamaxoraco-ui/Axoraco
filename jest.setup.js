@@ -37,6 +37,20 @@ jest.mock("next/navigation", () => ({
     },
 }));
 
+// Mock next/server for API route tests
+jest.mock("next/server", () => {
+    const originalModule = jest.requireActual("next/server");
+    return {
+        ...originalModule,
+        NextRequest: class MockNextRequest extends Request {
+            constructor(input, init) {
+                super(input, init);
+                this.nextUrl = new URL(input);
+            }
+        },
+    };
+});
+
 // Mock framer-motion to avoid animation issues in tests
 jest.mock("framer-motion", () => ({
     motion: {

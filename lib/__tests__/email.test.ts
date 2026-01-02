@@ -11,6 +11,12 @@ global.fetch = jest.fn();
 describe("Email Service", () => {
     beforeEach(() => {
         (global.fetch as jest.Mock).mockClear();
+        jest.spyOn(console, "warn").mockImplementation(() => { });
+        jest.spyOn(console, "error").mockImplementation(() => { });
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
     });
 
     describe("isEmailConfigured", () => {

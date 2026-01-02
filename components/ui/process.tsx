@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useMotionTemplate, useMotionValue } fr
 import { Search, Code2, Rocket, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { MouseEvent } from "react"
+import { DESIGN_SYSTEM } from "@/lib/design-system"
 
 interface Step {
     id: number
@@ -80,7 +81,7 @@ function ProcessCard({ step, index }: { step: Step; index: number }) {
                     <motion.div
                         className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
                         style={{
-                            background: useMotionTemplate`radial-gradient(500px circle at ${mouseX}px ${mouseY}px, rgba(99, 102, 241, 0.12), transparent 80%)`,
+                            background: useMotionTemplate`radial-gradient(${DESIGN_SYSTEM.SPOTLIGHT.SIZE_DEFAULT} circle at ${mouseX}px ${mouseY}px, rgba(99, 102, 241, 0.12), transparent 80%)`,
                         }}
                     />
 
@@ -140,7 +141,15 @@ export function Process() {
     return (
         <section className="py-24 relative overflow-hidden">
             {/* Background glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-600/5 rounded-full blur-[120px] pointer-events-none" />
+            <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none"
+                style={{
+                    width: DESIGN_SYSTEM.SIZING.PROCESS_BLOB.WIDTH,
+                    height: DESIGN_SYSTEM.SIZING.PROCESS_BLOB.HEIGHT,
+                    background: "rgba(79, 70, 229, 0.05)",
+                    filter: `blur(${DESIGN_SYSTEM.EFFECTS.BLUR_2XL})`
+                }}
+            />
 
             <div className="container mx-auto px-6 relative z-10" ref={containerRef}>
                 {/* Section Header with Badge */}

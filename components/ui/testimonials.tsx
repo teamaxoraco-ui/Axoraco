@@ -41,12 +41,21 @@ const testimonials: Testimonial[] = [
     },
 ]
 
+import { DESIGN_SYSTEM } from "@/lib/design-system"
+
 export function Testimonials() {
     return (
         <section className="py-16 sm:py-20 md:py-24 relative overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900/50 to-slate-950" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
+            <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-purple-600/10 rounded-full pointer-events-none"
+                style={{
+                    width: DESIGN_SYSTEM.SIZING.TESTIMONIAL_BLOB.WIDTH,
+                    height: DESIGN_SYSTEM.SIZING.TESTIMONIAL_BLOB.HEIGHT,
+                    filter: `blur(${DESIGN_SYSTEM.EFFECTS.BLUR_2XL})`
+                }}
+            />
 
             <div className="container mx-auto px-6 relative z-10">
                 {/* Section Header */}

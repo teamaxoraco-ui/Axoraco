@@ -99,47 +99,49 @@ export default function BlogPageClient() {
                     </div>
 
                     {/* Featured Post */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="mb-12"
-                    >
-                        <div className="group grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-all cursor-pointer">
-                            <div className="aspect-[16/10] rounded-2xl bg-slate-800 relative overflow-hidden">
-                                <div className={`absolute inset-0 bg-gradient-to-br ${posts[0].gradient} opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500`} />
-                                <div className="absolute top-4 left-4 flex gap-2">
-                                    <span className="px-3 py-1 bg-indigo-500/80 backdrop-blur-md rounded-full text-xs font-medium text-white">
-                                        Featured
-                                    </span>
-                                    <span className="px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-xs font-medium text-white border border-white/10">
-                                        {posts[0].tag}
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-center">
-                                <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-indigo-400 transition-colors">
-                                    {posts[0].title}
-                                </h2>
-                                <p className="text-slate-400 mb-6 leading-relaxed">
-                                    {posts[0].excerpt}
-                                </p>
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-4 text-sm text-slate-500">
-                                        <div className="flex items-center gap-2">
-                                            <User className="w-4 h-4" />
-                                            {posts[0].author}
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <Calendar className="w-4 h-4" />
-                                            {posts[0].date}
-                                        </div>
+                    {posts[0] && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className="mb-12"
+                        >
+                            <div className="group grid grid-cols-1 lg:grid-cols-2 gap-8 p-6 rounded-3xl bg-slate-900/60 border border-slate-800 hover:border-indigo-500/30 transition-all cursor-pointer">
+                                <div className="aspect-[16/10] rounded-2xl bg-slate-800 relative overflow-hidden">
+                                    <div className={`absolute inset-0 bg-gradient-to-br ${posts[0].gradient} opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-500`} />
+                                    <div className="absolute top-4 left-4 flex gap-2">
+                                        <span className="px-3 py-1 bg-indigo-500/80 backdrop-blur-md rounded-full text-xs font-medium text-white">
+                                            Featured
+                                        </span>
+                                        <span className="px-3 py-1 bg-black/50 backdrop-blur-md rounded-full text-xs font-medium text-white border border-white/10">
+                                            {posts[0].tag}
+                                        </span>
                                     </div>
-                                    <span className="text-sm text-indigo-400">{posts[0].readTime}</span>
+                                </div>
+                                <div className="flex flex-col justify-center">
+                                    <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 group-hover:text-indigo-400 transition-colors">
+                                        {posts[0].title}
+                                    </h2>
+                                    <p className="text-slate-400 mb-6 leading-relaxed">
+                                        {posts[0].excerpt}
+                                    </p>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-4 text-sm text-slate-500">
+                                            <div className="flex items-center gap-2">
+                                                <User className="w-4 h-4" />
+                                                {posts[0].author}
+                                            </div>
+                                            <div className="flex items-center gap-2">
+                                                <Calendar className="w-4 h-4" />
+                                                {posts[0].date}
+                                            </div>
+                                        </div>
+                                        <span className="text-sm text-indigo-400">{posts[0].readTime}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </motion.div>
+                        </motion.div>
+                    )}
 
                     {/* Post Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

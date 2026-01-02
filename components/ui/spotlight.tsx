@@ -2,6 +2,7 @@
 
 import { useRef, ReactNode, MouseEvent, useCallback, useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { DESIGN_SYSTEM } from "@/lib/design-system"
 
 /**
  * Check if device is mobile/touch
@@ -51,7 +52,7 @@ export function SpotlightCard({
             const x = clientX - left
             const y = clientY - top
             spotlightRef.current.style.background =
-                `radial-gradient(600px circle at ${x}px ${y}px, ${spotlightColor}, transparent 80%)`
+                `radial-gradient(${DESIGN_SYSTEM.SPOTLIGHT.SIZE_DEFAULT} circle at ${x}px ${y}px, ${spotlightColor}, transparent 80%)`
             rafRef.current = null
         })
     }, [spotlightColor, isMobile])
@@ -66,19 +67,21 @@ export function SpotlightCard({
             {!isMobile && (
                 <div
                     ref={spotlightRef}
-                    className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-10"
+                    className="pointer-events-none absolute -inset-px rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100 z-0"
                 />
             )}
             {/* Mobile: Subtle gradient border glow instead */}
             {isMobile && (
                 <div
-                    className="absolute -inset-px rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+                    className="absolute -inset-px rounded-[inherit] opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"
                     style={{
                         background: `linear-gradient(135deg, ${spotlightColor}, transparent 50%)`,
                     }}
                 />
             )}
-            {children}
+            <div className="relative z-10">
+                {children}
+            </div>
         </div>
     )
 }
@@ -113,7 +116,7 @@ export function SpotlightContainer({
             const x = clientX - left
             const y = clientY - top
             spotlightRef.current.style.background =
-                `radial-gradient(800px circle at ${x}px ${y}px, ${spotlightColor}, transparent 50%)`
+                `radial-gradient(${DESIGN_SYSTEM.SPOTLIGHT.SIZE_LARGE} circle at ${x}px ${y}px, ${spotlightColor}, transparent 50%)`
             rafRef.current = null
         })
     }, [spotlightColor, isMobile])
@@ -124,7 +127,9 @@ export function SpotlightContainer({
             onMouseMove={isMobile ? undefined : handleMouseMove}
             className={cn("relative", className)}
         >
-            {children}
+            <div className="relative z-10">
+                {children}
+            </div>
             {/* Desktop: Mouse-following spotlight */}
             {!isMobile && (
                 <div
@@ -135,7 +140,7 @@ export function SpotlightContainer({
             {/* Mobile: Static animated gradient for visual appeal */}
             {isMobile && (
                 <div
-                    className="pointer-events-none absolute inset-0 z-20 animate-gradient-shift"
+                    className="pointer-events-none absolute inset-0 z-0 animate-gradient-shift"
                     style={{
                         background: `radial-gradient(ellipse at 50% 0%, ${spotlightColor}, transparent 60%)`,
                         backgroundSize: '200% 200%',

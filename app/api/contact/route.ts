@@ -23,7 +23,7 @@ const EMAIL_TO = process.env.EMAIL_TO || "team.axoraco@gmail.com";
 interface ContactFormData {
     name: string;
     email: string;
-    company?: string;
+    company?: string | undefined;
     message: string;
 }
 
@@ -57,7 +57,7 @@ async function sendEmailNotification(data: ContactFormData): Promise<boolean> {
             to: data.email,
             subject: "Thanks for contacting Axoraco! 🚀",
             html: `
-                <h2>Hi ${data.name.split(" ")[0]}! 👋</h2>
+                <h2>Hi ${data.name.split(" ")[0] || data.name}! 👋</h2>
                 <p>Thanks for reaching out. We've received your message and will get back to you within 24 hours.</p>
                 <p>In the meantime, feel free to:</p>
                 <ul>

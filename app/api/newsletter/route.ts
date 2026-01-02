@@ -107,9 +107,13 @@ export async function POST(request: NextRequest) {
         if (isRedisAvailable() && rateLimiters.newsletter) {
             const rateLimitResult = await checkRateLimit(rateLimiters.newsletter, clientIP);
             if (!rateLimitResult.success) {
+                const retryAfter = Math.ceil((rateLimitResult.reset - Date.now()) / 1000);
                 return NextResponse.json(
                     { error: "Too many requests. Please try again later." },
-                    { status: 429 }
+                    {
+                        status: 429,
+                        headers: { "Retry-After": String(retryAfter) }
+                    }
                 );
             }
         }
