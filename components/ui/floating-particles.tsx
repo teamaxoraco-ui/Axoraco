@@ -30,7 +30,12 @@ export function FloatingParticles() {
         }
 
         const createParticles = () => {
-            const count = Math.floor((canvas.width * canvas.height) / 25000)
+            const isMobile = window.innerWidth < 768
+            // Reduce density on mobile: larger divisor = fewer particles
+            // Desktop: ~25000 (standard density)
+            // Mobile: ~60000 (sparse density)
+            const areaDivisor = isMobile ? 60000 : 25000
+            const count = Math.floor((canvas.width * canvas.height) / areaDivisor)
             particles = Array.from({ length: count }, () => ({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,

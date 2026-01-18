@@ -14,8 +14,9 @@ export function CustomCursor() {
     const posRef = useRef({ x: -100, y: -100 })
 
     useEffect(() => {
-        // Skip on touch devices
-        if ('ontouchstart' in window) return
+        // Check if the device has a coarse pointer (touch)
+        const isTouchDevice = window.matchMedia("(pointer: coarse)").matches
+        if (isTouchDevice) return
 
         const moveCursor = (e: MouseEvent) => {
             posRef.current = { x: e.clientX, y: e.clientY }
