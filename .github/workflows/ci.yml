@@ -80,9 +80,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Install test dependencies
-        run: npm install -D jest @testing-library/react @testing-library/jest-dom jest-environment-jsdom @types/jest
-      
       - name: Run unit tests
         run: npm test -- --coverage --passWithNoTests
 
