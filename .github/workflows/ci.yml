@@ -65,12 +65,12 @@ jobs:
           ls -la .next || echo ".next does not exist"
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build
-          path: .next/**
+          path: .next
           retention-days: 1
-          if-no-files-found: error
+          include-hidden-files: true
 
   test:
     name: Unit Tests
