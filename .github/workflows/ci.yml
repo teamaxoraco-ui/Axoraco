@@ -55,6 +55,15 @@ jobs:
           NEXT_PUBLIC_GA_MEASUREMENT_ID: ""
           NEXT_PUBLIC_GTM_CONTAINER_ID: ""
 
+      - name: Debug - List build output
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Directory contents:"
+          ls -la
+          echo ".next directory status:"
+          ls -la .next || echo ".next does not exist"
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
