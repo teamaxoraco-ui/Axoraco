@@ -116,6 +116,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
+        <meta name="google-site-verification" content="CISnLT1LUWaRjQ3R5MBzjXYcpoK3zaJQFD7IfNCHpjY" />
 
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
