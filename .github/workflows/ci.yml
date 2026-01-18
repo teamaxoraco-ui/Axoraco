@@ -65,10 +65,10 @@ jobs:
           ls -la .next || echo ".next does not exist"
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: build
-          path: ${{ github.workspace }}/.next
+          path: .next/**
           retention-days: 1
           if-no-files-found: error
 
