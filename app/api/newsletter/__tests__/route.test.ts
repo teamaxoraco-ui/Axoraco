@@ -32,13 +32,13 @@ jest.mock("resend", () => ({
 // Mock fetch globally
 global.fetch = jest.fn(() => Promise.resolve({ ok: true } as Response));
 
-// Helper to create mock request
-function createMockRequest(body: object) {
-    return {
-        json: jest.fn().mockResolvedValue(body),
-        headers: new Headers({ "Content-Type": "application/json" }),
-    };
-}
+import { checkRateLimit, isRedisAvailable, rateLimiters } from "@/lib/redis";
+import { sanitizeInput } from "@/lib/security";
+
+// Cast imports to jest.Mock for proper typing
+const mockIsRedisAvailable = isRedisAvailable as jest.Mock;
+const mockCheckRateLimit = checkRateLimit as jest.Mock;
+const mockSanitizeInput = sanitizeInput as jest.Mock;
 
 describe("Newsletter API Logic", () => {
     beforeEach(() => {
@@ -62,33 +62,29 @@ describe("Newsletter API Logic", () => {
 
     describe("Rate Limiting", () => {
         it("should check rate limit when Redis is available", async () => {
-            const { isRedisAvailable, checkRateLimit, rateLimiters } = require("@/lib/redis");
-
-            isRedisAvailable.mockReturnValue(true);
-            rateLimiters.newsletter = { mock: true };
-            checkRateLimit.mockResolvedValue({
+            mockIsRedisAvailable.mockReturnValue(true);
+            (rateLimiters as { newsletter: unknown }).newsletter = jest.fn();
+            mockCheckRateLimit.mockResolvedValue({
                 success: true,
                 remaining: 2,
                 reset: Date.now() + 60000,
                 limit: 3,
             });
 
-            const result = await checkRateLimit(rateLimiters.newsletter, "127.0.0.1");
+            const result = await mockCheckRateLimit(rateLimiters.newsletter, "127.0.0.1");
             expect(result.success).toBe(true);
         });
 
         it("should return limited when over quota", async () => {
-            const { checkRateLimit, rateLimiters } = require("@/lib/redis");
-
-            rateLimiters.newsletter = { mock: true };
-            checkRateLimit.mockResolvedValue({
+            (rateLimiters as { newsletter: unknown }).newsletter = jest.fn();
+            mockCheckRateLimit.mockResolvedValue({
                 success: false,
                 remaining: 0,
                 reset: Date.now() + 60000,
                 limit: 3,
             });
 
-            const result = await checkRateLimit(rateLimiters.newsletter, "127.0.0.1");
+            const result = await mockCheckRateLimit(rateLimiters.newsletter, "127.0.0.1");
             expect(result.success).toBe(false);
             expect(result.remaining).toBe(0);
         });
@@ -96,11 +92,9 @@ describe("Newsletter API Logic", () => {
 
     describe("Input Sanitization", () => {
         it("should sanitize email input", () => {
-            const { sanitizeInput } = require("@/lib/security");
+            mockSanitizeInput.mockImplementation((input: string) => input?.trim().toLowerCase() || "");
 
-            sanitizeInput.mockImplementation((input: string) => input?.trim().toLowerCase() || "");
-
-            expect(sanitizeInput("  TEST@EXAMPLE.COM  ")).toBe("test@example.com");
+            expect(mockSanitizeInput("  TEST@EXAMPLE.COM  ")).toBe("test@example.com");
         });
     });
 });
