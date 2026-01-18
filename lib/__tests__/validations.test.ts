@@ -39,7 +39,7 @@ describe("Form Validations", () => {
 
             expect(result.success).toBe(false);
             if (!result.success) {
-                expect(result.error.errors[0].path).toContain("email");
+                expect(result.error.errors[0]!.path).toContain("email");
             }
         });
 
@@ -52,7 +52,7 @@ describe("Form Validations", () => {
 
             expect(result.success).toBe(false);
             if (!result.success) {
-                expect(result.error.errors[0].path).toContain("name");
+                expect(result.error.errors[0]!.path).toContain("name");
             }
         });
 
@@ -65,7 +65,7 @@ describe("Form Validations", () => {
 
             expect(result.success).toBe(false);
             if (!result.success) {
-                expect(result.error.errors[0].path).toContain("message");
+                expect(result.error.errors[0]!.path).toContain("message");
             }
         });
 
