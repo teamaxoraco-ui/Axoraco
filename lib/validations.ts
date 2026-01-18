@@ -11,8 +11,9 @@ import { z } from "zod";
 export const contactFormSchema = z.object({
     name: z
         .string()
-        .min(1, "Name is required")
+        .min(2, "Name must be at least 2 characters")
         .max(100, "Name must be less than 100 characters")
+        .regex(/^[a-zA-Z\s'-]+$/, "Name contains invalid characters")
         .transform(s => s.trim()),
 
     email: z
@@ -27,7 +28,7 @@ export const contactFormSchema = z.object({
 
     message: z
         .string()
-        .min(1, "Message is required")
+        .min(10, "Message must be at least 10 characters")
         .max(5000, "Message must be less than 5000 characters"),
 });
 
