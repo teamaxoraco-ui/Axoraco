@@ -15,7 +15,9 @@ describe("Utils", () => {
         });
 
         it("handles boolean conditions", () => {
-            expect(cn("foo", true && "bar", false && "baz")).toBe("foo bar");
+            const truthy = true;
+            const falsy = false;
+            expect(cn("foo", truthy && "bar", falsy && "baz")).toBe("foo bar");
         });
 
         it("deduplicates Tailwind classes", () => {
@@ -32,10 +34,12 @@ describe("Utils", () => {
         });
 
         it("handles complex combinations", () => {
+            const truthy = true;
+            const falsy = false;
             const result = cn(
                 "base-class",
-                true && "conditional-true",
-                false && "conditional-false",
+                truthy && "conditional-true",
+                falsy && "conditional-false",
                 undefined,
                 { "object-true": true, "object-false": false },
                 ["array-1", "array-2"]
