@@ -1,0 +1,64 @@
+# How to Get Free Email Verification API Keys 🔑
+
+Follow these steps to get free keys. You can use just one, or all of them for maximum reliability.
+
+---
+
+### 1. Abstract API (Recommended - Easiest)
+*Limit: 100 free requests/month*
+
+1.  Go to: **https://app.abstractapi.com/users/signup**
+2.  Sign up with your email.
+3.  Once logged in, verify your email if asked.
+4.  On the dashboard, find "Email Validation / Verification".
+5.  Click **"Manage"** or **"API Key"**.
+6.  Copy the **API Key** (starts with `...`).
+7.  Add to `.env.local`: `EMAIL_VERIFY_ABSTRACT_KEY=your_key_here`
+
+---
+
+### 2. ZeroBounce
+*Limit: 100 free credits/month (refills monthly)*
+
+1.  Go to: **https://www.zerobounce.net/login/** -> Click "Register".
+2.  Sign up and verify your email link.
+3.  Log in to the dashboard.
+4.  In the menu, go to **"API - Keys & Info"**.
+5.  You should see your API key (or click "Create API Key").
+6.  Copy the key.
+7.  Add to `.env.local`: `EMAIL_VERIFY_ZEROBOUNCE_KEY=your_key_here`
+
+---
+
+### 3. Hunter.io
+*Limit: 25 free requests/month*
+
+1.  Go to: **https://hunter.io/users/sign_up**
+2.  Sign up using a "Business Email" (Gmail might work but they prefer custom domains).
+3.  Go to your profile menu (top right) -> **"API"**.
+4.  Copy the **API Key**.
+5.  Add to `.env.local`: `EMAIL_VERIFY_HUNTER_KEY=your_key_here`
+
+---
+
+### 4. ApiLayer
+*Limit: 100 free requests/month*
+
+1.  Go to: **https://apilayer.com/marketplace/email_verification-api**
+2.  Click **"Subscribe for Free"**.
+3.  Sign up if you don't have an account.
+4.  Once subscribed, your **API Key** will be shown at the top of the details page.
+5.  Add to `.env.local`: `EMAIL_VERIFY_APILAYER_KEY=your_key_here`
+
+---
+
+### ✅ Where to paste them?
+
+Open `d:\0Coding Stuff\AXORACO\.env.local` and paste them at the bottom:
+
+```env
+EMAIL_VERIFY_ABSTRACT_KEY=paste_here
+EMAIL_VERIFY_ZEROBOUNCE_KEY=paste_here
+EMAIL_VERIFY_HUNTER_KEY=paste_here
+EMAIL_VERIFY_APILAYER_KEY=paste_here
+```

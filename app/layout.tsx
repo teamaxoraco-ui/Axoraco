@@ -122,7 +122,6 @@ export default function RootLayout({
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
-        <link rel="manifest" href="/manifest.json" />
         {/* JSON-LD Structured Data for Organization */}
         <JsonLd />
         {/* Google Tag Manager */}

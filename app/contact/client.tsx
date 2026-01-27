@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Mail, MapPin, Phone, Send, Clock, Shield, Zap, CheckCircle2, AlertCircle, ExternalLink } from "lucide-react"
+import { Mail, MapPin, Phone, Send, Clock, Shield, Zap, CheckCircle2, AlertCircle, ExternalLink, XCircle } from "lucide-react"
 import { Navbar } from "@/components/ui/navbar"
 import { Footer } from "@/components/ui/footer"
 import { SpotlightCard, SpotlightContainer } from "@/components/ui/spotlight"
@@ -17,6 +17,7 @@ interface FormState {
 }
 
 type SubmitStatus = "idle" | "loading" | "success" | "error"
+type EmailStatus = "idle" | "valid" | "invalid" | "checking"
 
 export default function ContactPageClient() {
     const [formData, setFormData] = useState<FormState>({
@@ -27,16 +28,75 @@ export default function ContactPageClient() {
     })
     const [status, setStatus] = useState<SubmitStatus>("idle")
     const [errorMessage, setErrorMessage] = useState("")
+    const [emailStatus, setEmailStatus] = useState<EmailStatus>("idle")
+    const [emailError, setEmailError] = useState("")
+
+    // Verify email function (called only on submit)
+    const verifyEmailOnSubmit = async (email: string): Promise<boolean> => {
+        // Basic format check first (client-side)
+        const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
+        if (!emailRegex.test(email)) {
+            setEmailStatus("invalid")
+            setEmailError("Please enter a valid email address")
+            return false
+        }
+
+        setEmailStatus("checking")
+        setEmailError("")
+
+        try {
+            const response = await fetch("/api/verify-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            })
+
+            const result = await response.json()
+
+            if (result.valid) {
+                setEmailStatus("valid")
+                setEmailError("")
+                return true
+            } else {
+                setEmailStatus("invalid")
+                setEmailError(result.reason || "Invalid email address")
+                return false
+            }
+        } catch {
+            // On network error, assume valid to avoiding blocking legitimate users
+            setEmailStatus("valid")
+            setEmailError("")
+            return true
+        }
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { id, value } = e.target
         setFormData((prev) => ({
             ...prev,
-            [e.target.id]: e.target.value,
+            [id]: value,
         }))
+
+        // Reset email status on change (but don't verify yet)
+        if (id === "email") {
+            if (emailStatus !== "idle") {
+                setEmailStatus("idle")
+                setEmailError("")
+            }
+        }
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+
+        // 1. Verify Email First (Conserve Quota: Only check now)
+        const isEmailValid = await verifyEmailOnSubmit(formData.email)
+        if (!isEmailValid) {
+            setStatus("error")
+            setErrorMessage("Please fix the email address before submitting")
+            return
+        }
+
         setStatus("loading")
         setErrorMessage("")
 
@@ -57,11 +117,17 @@ export default function ContactPageClient() {
             const data = await response.json()
 
             if (!response.ok) {
+                // Handle specific validation errors from Zod
+                if (data.details && Array.isArray(data.details)) {
+                    const validationMsg = data.details.map((d: any) => d.message).join(". ")
+                    throw new Error(validationMsg || data.error)
+                }
                 throw new Error(data.error || "Something went wrong")
             }
 
             setStatus("success")
             setFormData({ firstName: "", lastName: "", email: "", message: "" })
+            setEmailStatus("idle")
         } catch (error) {
             setStatus("error")
             setErrorMessage(error instanceof Error ? error.message : "Failed to send message")
@@ -69,7 +135,7 @@ export default function ContactPageClient() {
     }
 
     return (
-        <main className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500/30">
+        <main className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500/30" suppressHydrationWarning>
             <Navbar />
 
             <SpotlightContainer className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6 overflow-hidden">
@@ -249,17 +315,53 @@ export default function ContactPageClient() {
                                         </div>
                                     </div>
 
+
                                     <div className="space-y-1 sm:space-y-2">
-                                        <label htmlFor="email" className="text-xs sm:text-sm font-medium text-slate-300">Email</label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            required
-                                            className="w-full bg-slate-950/50 border border-slate-700 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20 transition-all"
-                                            placeholder="john@company.com"
-                                        />
+                                        <label htmlFor="email" className="text-xs sm:text-sm font-medium text-slate-300 flex items-center gap-2">
+                                            Email
+                                            {emailStatus === "checking" && (
+                                                <LoadingSpinner size="sm" />
+                                            )}
+                                            {emailStatus === "valid" && (
+                                                <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+                                            )}
+                                            {emailStatus === "invalid" && (
+                                                <XCircle className="w-3.5 h-3.5 text-red-500" />
+                                            )}
+                                            {emailStatus === "checking" && (
+                                                <span className="text-xs text-yellow-400">Verifying...</span>
+                                            )}
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                type="email"
+                                                id="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                required
+                                                className={`w-full bg-slate-950/50 rounded-lg sm:rounded-xl px-3 sm:px-4 py-3 sm:py-3.5 text-sm sm:text-base text-white placeholder:text-slate-500 focus:outline-none transition-all ${emailStatus === "valid"
+                                                    ? "border-2 border-green-500 focus:border-green-500 focus:ring-1 focus:ring-green-500/20"
+                                                    : emailStatus === "invalid"
+                                                        ? "border-2 border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
+                                                        : emailStatus === "checking"
+                                                            ? "border-2 border-yellow-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/20"
+                                                            : "border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20"
+                                                    }`}
+                                                placeholder="john@company.com"
+                                            />
+                                        </div>
+                                        {emailStatus === "invalid" && emailError && (
+                                            <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
+                                                <AlertCircle className="w-3 h-3" />
+                                                {emailError}
+                                            </p>
+                                        )}
+                                        {emailStatus === "valid" && (
+                                            <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
+                                                <CheckCircle2 className="w-3 h-3" />
+                                                Email verified successfully
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className="space-y-1 sm:space-y-2">
