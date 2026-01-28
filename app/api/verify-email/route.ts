@@ -19,6 +19,38 @@ interface VerificationResult {
     };
 }
 
+// API Response Interfaces
+interface ZeroBounceResponse {
+    status: string;
+    mx_found: string;
+    error?: string;
+}
+
+interface AbstractResponse {
+    deliverability: string;
+    is_valid_format: { value: boolean };
+    is_mx_found: { value: boolean };
+    is_disposable_email: { value: boolean };
+    error?: { message: string };
+}
+
+interface ApiLayerResponse {
+    format_valid: boolean;
+    mx_found: boolean;
+    smtp_check: boolean;
+    disposable: boolean;
+    error?: string;
+}
+
+interface HunterResponse {
+    data: {
+        status: string;
+        mx_records: boolean;
+        disposable: boolean;
+    };
+    errors?: unknown[];
+}
+
 /**
  * Fallback: Verify email via DNS MX record lookup
  */
@@ -32,7 +64,7 @@ async function verifyViaDNS(domain: string): Promise<VerificationResult> {
                 reason: "Email domain cannot receive emails (no MX records)",
                 provider: "DNS",
                 details: { format: true, domain: true, mx: false, disposable: false }
-            } as any;
+            } as unknown as VerificationResult;
         }
 
         // Basic disposable check for DNS fallback
@@ -59,7 +91,7 @@ async function verifyViaDNS(domain: string): Promise<VerificationResult> {
             details: { format: true, domain: true, mx: true, disposable: false }
         };
 
-    } catch (dnsError) {
+    } catch {
         return {
             valid: false,
             reason: "Email domain does not exist",
@@ -70,7 +102,7 @@ async function verifyViaDNS(domain: string): Promise<VerificationResult> {
 }
 
 // Timeout helper (5 seconds max)
-const fetchWithTimeout = async (url: string, options: any = {}, timeout = 5000) => {
+const fetchWithTimeout = async (url: string, options: RequestInit = {}, timeout = 5000) => {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
     try {
@@ -92,7 +124,7 @@ const fetchWithTimeout = async (url: string, options: any = {}, timeout = 5000) 
 async function verifyZeroBounce(email: string, apiKey: string): Promise<VerificationResult | null> {
     try {
         const res = await fetchWithTimeout(`https://api.zerobounce.net/v2/validate?api_key=${apiKey}&email=${email}`);
-        const data = await res.json();
+        const data = (await res.json()) as ZeroBounceResponse;
 
         // If error or no status, failover
         if (data.error || !data.status) {
@@ -106,7 +138,7 @@ async function verifyZeroBounce(email: string, apiKey: string): Promise<Verifica
                 valid: true,
                 reason: "Verified by ZeroBounce",
                 provider: "ZeroBounce",
-                details: { format: true, domain: true, mx: true, disposable: false, smtp: true }
+                details: { format: true, domain: true, mx: data.mx_found === "true", disposable: false, smtp: true }
             };
         }
 
@@ -140,7 +172,7 @@ async function verifyZeroBounce(email: string, apiKey: string): Promise<Verifica
 async function verifyAbstract(email: string, apiKey: string): Promise<VerificationResult | null> {
     try {
         const res = await fetchWithTimeout(`https://emailvalidation.abstractapi.com/v1/?api_key=${apiKey}&email=${email}`);
-        const data = await res.json();
+        const data = (await res.json()) as AbstractResponse;
 
         if (data.error) throw new Error(data.error.message || "Abstract API Error");
 
@@ -173,7 +205,7 @@ async function verifyApiLayer(email: string, apiKey: string): Promise<Verificati
         const res = await fetchWithTimeout(`https://api.apilayer.com/email_verification/check?email=${email}`, {
             headers: { "apikey": apiKey }
         });
-        const data = await res.json();
+        const data = (await res.json()) as ApiLayerResponse;
 
         if (data.error) throw new Error(data.error);
 
@@ -203,7 +235,7 @@ async function verifyApiLayer(email: string, apiKey: string): Promise<Verificati
 async function verifyHunter(email: string, apiKey: string): Promise<VerificationResult | null> {
     try {
         const res = await fetchWithTimeout(`https://api.hunter.io/v2/email-verifier?email=${email}&api_key=${apiKey}`);
-        const data = await res.json();
+        const data = (await res.json()) as HunterResponse;
 
         if (data.errors) throw new Error("Hunter API Error");
 
@@ -233,7 +265,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Verificat
         const { email } = await request.json();
 
         if (!email || typeof email !== "string") {
-            return NextResponse.json({ valid: false, reason: "Email is required" } as any, { status: 400 });
+            return NextResponse.json({ valid: false, reason: "Email is required" }, { status: 400 });
         }
 
         // 1. Basic format validation (Regex) - Instant
@@ -268,7 +300,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Verificat
         // 3. Try Providers (Optimized Order: ZeroBounce First)
         let result: VerificationResult | null = null;
 
-        // Priority 1: ZeroBounce (Best Speed/Reliability)
+        // Priority 1: ZeroBounce (Fastest & Best)
         if (!result && process.env.EMAIL_VERIFY_ZEROBOUNCE_KEY) {
             result = await verifyZeroBounce(email, process.env.EMAIL_VERIFY_ZEROBOUNCE_KEY);
         }

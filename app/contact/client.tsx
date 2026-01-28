@@ -119,7 +119,7 @@ export default function ContactPageClient() {
             if (!response.ok) {
                 // Handle specific validation errors from Zod
                 if (data.details && Array.isArray(data.details)) {
-                    const validationMsg = data.details.map((d: any) => d.message).join(". ")
+                    const validationMsg = data.details.map((d: { message: string }) => d.message).join(". ")
                     throw new Error(validationMsg || data.error)
                 }
                 throw new Error(data.error || "Something went wrong")
