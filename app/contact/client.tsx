@@ -17,7 +17,7 @@ interface FormState {
 }
 
 type SubmitStatus = "idle" | "loading" | "success" | "error"
-type EmailStatus = "idle" | "valid" | "invalid" | "checking"
+type EmailStatus = "idle" | "valid" | "invalid" | "checking" | "neutral" // Added neutral status
 
 export default function ContactPageClient() {
     const [formData, setFormData] = useState<FormState>({
@@ -29,20 +29,24 @@ export default function ContactPageClient() {
     const [status, setStatus] = useState<SubmitStatus>("idle")
     const [errorMessage, setErrorMessage] = useState("")
     const [emailStatus, setEmailStatus] = useState<EmailStatus>("idle")
-    const [emailError, setEmailError] = useState("")
+    const [emailFeedback, setEmailFeedback] = useState("") // Renamed from emailError to verify feedback type
+
+    // Helper to set email status with message
+    const setEmailState = (status: EmailStatus, message: string) => {
+        setEmailStatus(status)
+        setEmailFeedback(message)
+    }
 
     // Verify email function (called only on submit)
     const verifyEmailOnSubmit = async (email: string): Promise<boolean> => {
         // Basic format check first (client-side)
         const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/
         if (!emailRegex.test(email)) {
-            setEmailStatus("invalid")
-            setEmailError("Please enter a valid email address")
+            setEmailState("invalid", "Please enter a valid email address")
             return false
         }
 
-        setEmailStatus("checking")
-        setEmailError("")
+        setEmailState("checking", "")
 
         try {
             const response = await fetch("/api/verify-email", {
@@ -54,18 +58,20 @@ export default function ContactPageClient() {
             const result = await response.json()
 
             if (result.valid) {
-                setEmailStatus("valid")
-                setEmailError("")
+                // Check verification confidence
+                if (result.confidence === "low") {
+                    setEmailState("neutral", "Email address format is valid")
+                } else {
+                    setEmailState("valid", "Email verified successfully")
+                }
                 return true
             } else {
-                setEmailStatus("invalid")
-                setEmailError(result.reason || "Invalid email address")
+                setEmailState("invalid", result.reason || "Invalid email address")
                 return false
             }
         } catch {
-            // On network error, assume valid to avoiding blocking legitimate users
-            setEmailStatus("valid")
-            setEmailError("")
+            // On network error, assume valid (neutral)
+            setEmailState("neutral", "Email address accepted")
             return true
         }
     }
@@ -80,8 +86,7 @@ export default function ContactPageClient() {
         // Reset email status on change (but don't verify yet)
         if (id === "email") {
             if (emailStatus !== "idle") {
-                setEmailStatus("idle")
-                setEmailError("")
+                setEmailState("idle", "")
             }
         }
     }
@@ -127,7 +132,7 @@ export default function ContactPageClient() {
 
             setStatus("success")
             setFormData({ firstName: "", lastName: "", email: "", message: "" })
-            setEmailStatus("idle")
+            setEmailState("idle", "")
         } catch (error) {
             setStatus("error")
             setErrorMessage(error instanceof Error ? error.message : "Failed to send message")
@@ -325,6 +330,11 @@ export default function ContactPageClient() {
                                             {emailStatus === "valid" && (
                                                 <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
                                             )}
+                                            {emailStatus === "neutral" && (
+                                                <div className="w-3.5 h-3.5 rounded-full border-2 border-slate-500 flex items-center justify-center">
+                                                    <span className="w-1 h-1 bg-slate-500 rounded-full" />
+                                                </div>
+                                            )}
                                             {emailStatus === "invalid" && (
                                                 <XCircle className="w-3.5 h-3.5 text-red-500" />
                                             )}
@@ -343,23 +353,33 @@ export default function ContactPageClient() {
                                                     ? "border-2 border-green-500 focus:border-green-500 focus:ring-1 focus:ring-green-500/20"
                                                     : emailStatus === "invalid"
                                                         ? "border-2 border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500/20"
-                                                        : emailStatus === "checking"
-                                                            ? "border-2 border-yellow-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/20"
-                                                            : "border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20"
+                                                        : emailStatus === "neutral"
+                                                            ? "border-2 border-slate-600 focus:border-slate-500 focus:ring-1 focus:ring-slate-500/20"
+                                                            : emailStatus === "checking"
+                                                                ? "border-2 border-yellow-500 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/20"
+                                                                : "border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500/20"
                                                     }`}
                                                 placeholder="john@company.com"
                                             />
                                         </div>
-                                        {emailStatus === "invalid" && emailError && (
+                                        {emailStatus === "invalid" && emailFeedback && (
                                             <p className="text-xs text-red-400 mt-1 flex items-center gap-1">
                                                 <AlertCircle className="w-3 h-3" />
-                                                {emailError}
+                                                {emailFeedback}
                                             </p>
                                         )}
                                         {emailStatus === "valid" && (
                                             <p className="text-xs text-green-400 mt-1 flex items-center gap-1">
                                                 <CheckCircle2 className="w-3 h-3" />
-                                                Email verified successfully
+                                                {emailFeedback}
+                                            </p>
+                                        )}
+                                        {emailStatus === "neutral" && (
+                                            <p className="text-xs text-slate-400 mt-1 flex items-center gap-1">
+                                                <div className="w-3 h-3 rounded-full border border-slate-500 flex items-center justify-center">
+                                                    <span className="w-0.5 h-0.5 bg-slate-500 rounded-full" />
+                                                </div>
+                                                {emailFeedback}
                                             </p>
                                         )}
                                     </div>

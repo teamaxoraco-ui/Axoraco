@@ -9,6 +9,7 @@ const resolveMx = promisify(dns.resolveMx);
 interface VerificationResult {
     valid: boolean;
     reason: string;
+    confidence: "high" | "low"; // New field
     provider?: string;
     details?: {
         format: boolean;
@@ -62,6 +63,7 @@ async function verifyViaDNS(domain: string): Promise<VerificationResult> {
             return {
                 valid: false,
                 reason: "Email domain cannot receive emails (no MX records)",
+                confidence: "high",
                 provider: "DNS",
                 details: { format: true, domain: true, mx: false, disposable: false }
             } as unknown as VerificationResult;
@@ -79,6 +81,7 @@ async function verifyViaDNS(domain: string): Promise<VerificationResult> {
             return {
                 valid: false,
                 reason: "Disposable email addresses are not allowed",
+                confidence: "high",
                 provider: "DNS",
                 details: { format: true, domain: true, mx: true, disposable: true }
             };
@@ -87,6 +90,7 @@ async function verifyViaDNS(domain: string): Promise<VerificationResult> {
         return {
             valid: true,
             reason: "Email domain verified successfully",
+            confidence: "low", // DNS only = Low confidence
             provider: "DNS",
             details: { format: true, domain: true, mx: true, disposable: false }
         };
@@ -95,6 +99,7 @@ async function verifyViaDNS(domain: string): Promise<VerificationResult> {
         return {
             valid: false,
             reason: "Email domain does not exist",
+            confidence: "high",
             provider: "DNS",
             details: { format: true, domain: false, mx: false, disposable: false }
         };
@@ -137,6 +142,7 @@ async function verifyZeroBounce(email: string, apiKey: string): Promise<Verifica
             return {
                 valid: true,
                 reason: "Verified by ZeroBounce",
+                confidence: "high",
                 provider: "ZeroBounce",
                 details: { format: true, domain: true, mx: data.mx_found === "true", disposable: false, smtp: true }
             };
@@ -151,6 +157,7 @@ async function verifyZeroBounce(email: string, apiKey: string): Promise<Verifica
         return {
             valid: false,
             reason: `Email is ${data.status}`,
+            confidence: "high",
             provider: "ZeroBounce",
             details: {
                 format: true,
@@ -182,6 +189,7 @@ async function verifyAbstract(email: string, apiKey: string): Promise<Verificati
         return {
             valid: isValid,
             reason: isValid ? "Verified by Abstract API" : "Email address does not exist",
+            confidence: "high",
             provider: "AbstractAPI",
             details: {
                 format: data.is_valid_format.value,
@@ -214,6 +222,7 @@ async function verifyApiLayer(email: string, apiKey: string): Promise<Verificati
         return {
             valid: isValid,
             reason: isValid ? "Verified by ApiLayer" : "Email address invalid",
+            confidence: "high",
             provider: "ApiLayer",
             details: {
                 format: data.format_valid,
@@ -245,6 +254,7 @@ async function verifyHunter(email: string, apiKey: string): Promise<Verification
         return {
             valid: isValid,
             reason: isValid ? "Verified by Hunter.io" : "Email address invalid",
+            confidence: "high",
             provider: "Hunter.io",
             details: {
                 format: true, // Hunter validates format implicitly
@@ -265,7 +275,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Verificat
         const { email } = await request.json();
 
         if (!email || typeof email !== "string") {
-            return NextResponse.json({ valid: false, reason: "Email is required" }, { status: 400 });
+            return NextResponse.json({ valid: false, reason: "Email is required", confidence: "high" }, { status: 400 });
         }
 
         // 1. Basic format validation (Regex) - Instant
@@ -274,6 +284,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Verificat
             return NextResponse.json({
                 valid: false,
                 reason: "Invalid email format",
+                confidence: "high",
                 provider: "FormatCheck",
                 details: { format: false, domain: false, mx: false, disposable: false }
             });
@@ -341,6 +352,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Verificat
         return NextResponse.json({
             valid: false,
             reason: "Verification failed",
+            confidence: "low",
             provider: "Error",
         }, { status: 500 });
     }
